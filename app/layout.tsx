@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import "./styles/dashboard-layout.css";
+import "./styles/globals.css";
+import "./styles/variables.css";
+import styles from './layout.module.css';
 import Link from "next/link";
+import { mockCourses } from "./data/mockCourses";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,18 +21,6 @@ export const metadata: Metadata = {
   description: "Playing around in Next.js",
 };
 
-interface MenuItem {
-  menuItemName: string;
-  link: string;
-}
-
-const menuItems: MenuItem[] = [
-  { menuItemName: "Courses", link: "/routes/courses" },
-  { menuItemName: "Modules", link: "/routes/modules" },
-  { menuItemName: "Assessments", link: "/routes/assessments" },
-  { menuItemName: "Resources", link: "/routes/resources" },
-  { menuItemName: "Classrooms", link: "/routes/classrooms" },
-];
 
 export default function RootLayout({
   children,
@@ -40,38 +30,40 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <div className="dashboard-layout">
-          <aside className="sidebar">
-            <div className="sidebar-inner-flex">
+        <div className={styles.dashboardLayout}>
+          <aside className={styles.sidebar}>
+            <div className={styles.flexContainer}>
               <div>
-                <div className="sidebar-jumbotron">
-                  <Link href="/" className="sidebar-title">
+                <div className={styles.jumbotron}>
+                  <Link href="/" className={styles.sidebarTitle}>
                     <h1>Next.js LMS 🪐</h1>
                   </Link>
                 </div>
-                <nav className="sidebar-menu-container">
-                  {menuItems.map((item, index) => (
+                <nav className={styles.sidebarMenu}>
+                  {mockCourses.map((course) => (
                     <Link
-                      key={index}
-                      href={item.link}
-                      className="sidebar-menu-button"
+                      key={course.id}
+                      href={`/routes/courses/${course.id}`}
+                      className={styles.sidebarButton}
                     >
-                      {item.menuItemName}
+                      {course.id}: {course.title}
                     </Link>
                   ))}
                 </nav>
               </div>
-              <div className="sidebar-button-group">
-                <button className="sidebar-menu-button settings-button">
-                  Settings
+              <div className={styles.buttonGroup}>
+                <button
+                  className={`${styles.sidebarButton} ${styles.accountButton}`}
+                >
+                  Account
                 </button>
-                <button className="sidebar-menu-button logout-button">
+                <button className={`${styles.sidebarButton} ${styles.logoutButton}`}>
                   Logout
                 </button>
               </div>
             </div>
           </aside>
-          <main className="dashboard-content">{children}</main>
+          <main className={styles.dashboardContent}>{children}</main>
         </div>
       </body>
     </html>

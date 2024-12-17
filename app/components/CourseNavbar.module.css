@@ -1,0 +1,45 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px lightblue solid;
+}
+
+.menu {
+  display: flex;
+  list-style-type: none;
+}
+
+.menuItem {
+  margin-right: 4px;
+  background-color: lightgray;
+  border-radius: 4px;
+  padding: 6px 12px;
+}
+
+.menuItem:hover {
+  background: #fccd5b;
+  cursor: pointer;
+}
+
+.navButtons {
+}
+
+.settingsButton,
+.editAssignments {
+  margin-left: 4px;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  background: lightgray;
+}
+
+.settingsButton:hover {
+  background: #fccd5b;
+  cursor: pointer;
+}
+
+.editAssignments:hover {
+  background: lightskyblue;
+  cursor: pointer;
+}

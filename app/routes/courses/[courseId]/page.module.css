@@ -1,0 +1,63 @@
+.container {
+}
+
+.headerSection {
+    margin-bottom: 6px;
+}
+
+.courseTitle {
+ 
+}
+
+.courseId {
+    font-size: small !important;
+}
+
+.courseAssignments {
+    margin-top: 10px;
+}
+
+.newAssignment {
+    border: 2px lightskyblue solid;
+    background: aliceblue;
+    padding: 10px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+.newAssignment:hover {
+    background: #fccd5b;
+}
+
+.courseDescription {
+ 
+}
+
+.assignmentContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid grey;
+    border-radius: 4px;
+    margin: 10px 0;
+    padding: 4px 12px;
+}
+
+.assignmentContainer:hover {
+    background-color: #fccd5b;
+}
+
+.assignmentTitle {
+
+}
+
+.assignmentDescription {
+    color: #444444;
+}
+
+.assignmentDueDate {
+
+}
+
+.courseDetails {
+    
+}
