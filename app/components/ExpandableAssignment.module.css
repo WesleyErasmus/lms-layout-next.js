@@ -1,0 +1,30 @@
+.assignmentContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid grey;
+    border-radius: 4px;
+    margin: 10px 0;
+    padding: 4px 12px;
+}
+
+.assignmentContainer:hover {
+    background-color: #fccd5b;
+    cursor: pointer;
+}
+
+.assignmentTitle {
+
+}
+
+.assignmentDescription {
+    color: #444444;
+}
+
+.assignmentDueDate {
+
+}
+
+.courseDetails {
+    
+}

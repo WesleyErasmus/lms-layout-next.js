@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./styles/globals.css";
 import "./styles/variables.css";
-import styles from './layout.module.css';
+import styles from "./layout.module.css";
 import Link from "next/link";
-import { mockCourses } from "./data/mockCourses";
+import { supabase } from "@/lib/supabase/client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,12 +21,17 @@ export const metadata: Metadata = {
   description: "Playing around in Next.js",
 };
 
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { data: courses, error } = await supabase.from("courses").select("*");
+
+  if (error) {
+    console.error("Error fetching courses:", error);
+    return <div>Error loading courses</div>;
+  }
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
@@ -40,13 +45,14 @@ export default function RootLayout({
                   </Link>
                 </div>
                 <nav className={styles.sidebarMenu}>
-                  {mockCourses.map((course) => (
+                  {courses.map((course) => (
                     <Link
                       key={course.id}
                       href={`/routes/courses/${course.id}`}
                       className={styles.sidebarButton}
                     >
-                      {course.id}: {course.title}
+                      {/* {course.id}:  */}
+                      {course.title}
                     </Link>
                   ))}
                 </nav>
@@ -57,7 +63,9 @@ export default function RootLayout({
                 >
                   Account
                 </button>
-                <button className={`${styles.sidebarButton} ${styles.logoutButton}`}>
+                <button
+                  className={`${styles.sidebarButton} ${styles.logoutButton}`}
+                >
                   Logout
                 </button>
               </div>

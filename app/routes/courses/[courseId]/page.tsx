@@ -1,16 +1,27 @@
-import { mockCourses } from "@/app/data/mockCourses";
+import { supabase } from "@/lib/supabase/client";
 import { notFound } from "next/navigation";
 import styles from "./page.module.css";
 import CourseNavbar from "@/app/components/CourseNavbar";
+import ExpandableAssignment from "@/app/components/ExpandableAssignment";
 
-export default function CoursePage({
+export default async function CourseContent({
   params,
 }: {
   params: { courseId: string };
 }) {
-  const course = mockCourses.find((course) => course.id === params.courseId);
+  const { data: course, error } = await supabase
+    .from("courses")
+    .select(
+      `
+      *,
+      assignments(*)
+    `
+    )
+    .eq("id", params.courseId)
+    .single();
 
-  if (!course) {
+  if (error || !course) {
+    console.error("Error fetching course:", error);
     notFound();
   }
 
@@ -25,25 +36,8 @@ export default function CoursePage({
       <section className={styles.courseAssignments}>
         <button className={styles.newAssignment}>+ New Assignment</button>
         {course.assignments.map((assignment) => (
-          <div key={assignment.id} className={styles.assignmentContainer}>
-            <div>
-              <h3 className={styles.assignmentTitle}>{assignment.title}</h3>
-              <p className={styles.assignmentDescription}>
-                {assignment.description}
-              </p>
-            </div>
-            <div>
-              {assignment.dueDate && (
-                <p className={styles.assignmentDueDate}>
-                  Due: {assignment.dueDate.toLocaleDateString()}
-                </p>
-              )}
-            </div>
-          </div>
+          <ExpandableAssignment key={assignment.id} assignment={assignment} />
         ))}
-      </section>
-      <section className={styles.courseDetails}>
-        {/* <p>Number of Students: {course.students}</p> */}
       </section>
     </div>
   );
@@ -54,7 +48,11 @@ export async function generateMetadata({
 }: {
   params: { courseId: string };
 }) {
-  const course = mockCourses.find((course) => course.id === params.courseId);
+  const { data: course } = await supabase
+    .from("courses")
+    .select("title")
+    .eq("id", params.courseId)
+    .single();
 
   return {
     title: course ? `${course.title} | Next.js LMS` : "Course Not Found",
@@ -62,7 +60,11 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return mockCourses.map((course) => ({
-    courseId: course.id,
-  }));
+  const { data: courses } = await supabase.from("courses").select("id");
+
+  return (
+    courses?.map((course) => ({
+      courseId: course.id,
+    })) || []
+  );
 }
