@@ -1,14 +1,23 @@
 import React from "react";
+import Link from "next/link";
 import styles from "./CourseNavbar.module.css";
 
-const CourseNavbar = () => {
+const CourseNavbar = ({ courseId }: { courseId: string }) => {
   return (
     <nav className={styles.navbar}>
       <div>
         <ul className={styles.menu}>
-          <li className={styles.menuItem}>Assignments</li>
-          <li className={styles.menuItem}>Students</li>
-          <li className={styles.menuItem}>Grades</li>
+          <li className={styles.menuItem}>
+            <Link className={styles.menuItemLink} href={`/routes/courses/${courseId}/assignments`}>
+              Assignments
+            </Link>
+          </li>
+          <li className={styles.menuItem}>
+            <Link className={styles.menuItemLink} href={`/routes/courses/${courseId}/students`}>Students</Link>
+          </li>
+          <li className={styles.menuItem}>
+            <Link className={styles.menuItemLink} href={`/routes/courses/${courseId}/grades`}>Grades</Link>
+          </li>
         </ul>
       </div>
       <div className={styles.navButtons}>

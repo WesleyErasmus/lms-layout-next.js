@@ -18,7 +18,7 @@ export default async function Home() {
           <Link
             className={styles.courseLink}
             key={course.id}
-            href={`/routes/courses/${course.id}`}
+            href={`/routes/courses/${course.id}/assignments`}
           >
             <div className={styles.courseCard}>
               <div className={styles.imagePlaceholder}>

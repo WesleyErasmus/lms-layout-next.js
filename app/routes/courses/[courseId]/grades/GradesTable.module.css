@@ -1,0 +1,81 @@
+.container {
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.headerTitle {
+  
+}
+
+.switchContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+}
+
+.tableHead {
+  background-color: #fccd5b;
+}
+
+.tableHeaderCell {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  text-align: left;
+}
+
+.tableBodyCell {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  text-align: center;
+}
+
+.studentCell {
+  text-align: left;
+}
+
+.studentInfo {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.input {
+  width: 5rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+.finalGrade {
+  font-weight: 700;
+}
+
+.savingOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.savingMessage {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}

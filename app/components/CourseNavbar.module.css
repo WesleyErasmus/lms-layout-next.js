@@ -17,6 +17,11 @@
   padding: 6px 12px;
 }
 
+.menuItemLink {
+  text-decoration: none;
+  color: #000;
+}
+
 .menuItem:hover {
   background: #fccd5b;
   cursor: pointer;

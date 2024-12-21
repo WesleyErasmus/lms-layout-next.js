@@ -46,14 +46,30 @@ export default async function RootLayout({
                 </div>
                 <nav className={styles.sidebarMenu}>
                   {courses.map((course) => (
-                    <Link
-                      key={course.id}
-                      href={`/routes/courses/${course.id}`}
-                      className={styles.sidebarButton}
-                    >
-                      {/* {course.id}:  */}
-                      {course.title}
-                    </Link>
+                    <div key={course.id} className={styles.sidebarButton}>
+                      <Link
+                        className={styles.buttonCourseTitle}
+                        href={`/routes/courses/${course.id}/assignments`}
+                      >
+                        {course.title}
+                      </Link>
+                      <div className={styles.buttonSubLinksContainer}>
+                        <Link
+                          href={`/routes/courses/${course.id}/assignments`}
+                          className={styles.buttonLinks}
+                        >
+                          <span>Assignments</span>
+                        </Link>
+                        <span>{" | "}</span>
+                        <Link
+                          href={`/routes/courses/${course.id}/grades`}
+                          className={styles.buttonLinks}
+                        >
+                          
+                          <span>Grades</span>
+                        </Link>
+                      </div>
+                    </div>
                   ))}
                 </nav>
               </div>

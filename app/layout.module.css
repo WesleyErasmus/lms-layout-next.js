@@ -58,6 +58,21 @@
   background: #fccd5b;
 }
 
+.buttonCourseTitle {
+  text-decoration: none;
+  color: #000;
+}
+
+.buttonLinks {
+  color: darkblue;
+}
+
+.buttonSubLinksContainer {
+  padding: 4px;
+
+}
+
+
 .buttonGroup {
   
 }

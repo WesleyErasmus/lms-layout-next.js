@@ -1,0 +1,11 @@
+
+.newAssignmentButton {
+    border: 2px lightskyblue solid;
+    background: aliceblue;
+    padding: 10px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+.newAssignmentButton:hover {
+    background: #fccd5b;
+}
