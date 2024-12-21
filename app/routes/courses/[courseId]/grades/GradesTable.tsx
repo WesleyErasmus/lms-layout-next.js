@@ -13,6 +13,21 @@ interface GradesTableProps {
   courseId: string;
 }
 
+interface InvalidGrade {
+  value: number;
+  maxMarks: number;
+}
+
+interface GradeInfo {
+  finalGrade: number;
+  isPartial: boolean;
+  gradedAssignments: number;
+  totalAssignments: number;
+  maxPossibleGrade: number;
+  weightedSoFar: number;
+  totalWeight: number;
+}
+
 export default function GradesTable({
   initialAssignments,
   initialEnrollments,
@@ -22,6 +37,9 @@ export default function GradesTable({
   const [grades, setGrades] = useState(initialGrades);
   const [saving, setSaving] = useState(false);
   const [editedGrades, setEditedGrades] = useState(new Map());
+  const [invalidGrades, setInvalidGrades] = useState(
+    new Map<string, InvalidGrade>()
+  );
 
   useEffect(() => {
     console.log("Initial Data:", {
@@ -41,33 +59,56 @@ export default function GradesTable({
   const handleGradeChange = (
     studentId: string,
     assignmentId: string,
-    value: string
+    value: string,
+    maxMarks: number
   ) => {
     const key = `${studentId}|${assignmentId}`;
     const numericValue = value === "" ? null : parseFloat(value);
 
-    if (value !== "" && (isNaN(numericValue!) || numericValue! < 0)) {
+    if (value === "") {
+      setInvalidGrades((prev) => {
+        const newInvalid = new Map(prev);
+        newInvalid.delete(key);
+        return newInvalid;
+      });
+      setEditedGrades((prev) => new Map(prev).set(key, numericValue));
+      return;
+    }
+
+    if (isNaN(numericValue!)) {
       console.error("Invalid grade value:", value);
       return;
+    }
+
+    if (numericValue! < 0 || numericValue! > maxMarks) {
+      setInvalidGrades((prev) =>
+        new Map(prev).set(key, {
+          value: numericValue!,
+          maxMarks,
+        })
+      );
+    } else {
+      setInvalidGrades((prev) => {
+        const newInvalid = new Map(prev);
+        newInvalid.delete(key);
+        return newInvalid;
+      });
     }
 
     setEditedGrades((prev) => new Map(prev).set(key, numericValue));
   };
 
   const saveGrades = async () => {
+    if (invalidGrades.size > 0) {
+      alert("Please correct invalid grades before saving.");
+      return;
+    }
+
     setSaving(true);
     try {
       const gradesToUpdate = Array.from(editedGrades.entries()).map(
         ([key, marks_achieved]) => {
           const [student_id, assignment_id] = key.split("|");
-
-          console.log("Processing grade:", {
-            key,
-            student_id,
-            assignment_id,
-            marks_achieved,
-          });
-
           return {
             student_id,
             assignment_id,
@@ -76,10 +117,7 @@ export default function GradesTable({
         }
       );
 
-      console.log("Final grades to update:", gradesToUpdate);
-
       const { error } = await supabase.from("grades").upsert(gradesToUpdate);
-      console.log("Supabase response:", { error });
 
       if (error) throw error;
 
@@ -108,9 +146,11 @@ export default function GradesTable({
     }
   };
 
-  const calculateFinalGrade = (enrollment: Enrollment) => {
+  const calculateGradeInfo = (enrollment: Enrollment): GradeInfo => {
     let totalWeightedMarks = 0;
     let totalWeight = 0;
+    let gradedAssignments = 0;
+    let unaccountedWeight = 0;
 
     initialAssignments.forEach((assignment) => {
       const gradeKey = `${enrollment.student_id}|${assignment.id}`;
@@ -120,10 +160,76 @@ export default function GradesTable({
         const weightedGrade = (grade / assignment.marks) * assignment.weighting;
         totalWeightedMarks += weightedGrade;
         totalWeight += assignment.weighting;
+        gradedAssignments++;
+      } else {
+        unaccountedWeight += assignment.weighting;
       }
     });
 
-    return totalWeight > 0 ? (totalWeightedMarks / totalWeight) * 100 : 0;
+    const currentGrade =
+      totalWeight > 0 ? (totalWeightedMarks / totalWeight) * 100 : 0;
+    const maxPossibleGrade =
+      totalWeight > 0
+        ? ((totalWeightedMarks + (unaccountedWeight * 100) / 100) /
+            (totalWeight + unaccountedWeight)) *
+          100
+        : 100;
+
+    return {
+      finalGrade: currentGrade,
+      isPartial: gradedAssignments < initialAssignments.length,
+      gradedAssignments,
+      totalAssignments: initialAssignments.length,
+      maxPossibleGrade,
+      weightedSoFar: totalWeight,
+      totalWeight: totalWeight + unaccountedWeight,
+    };
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const getInputStyle = (gradeKey: string, value: number | null) => {
+    const invalidGrade = invalidGrades.get(gradeKey);
+    if (invalidGrade) {
+      return `${styles.input} ${styles.invalidInput}`;
+    }
+    return styles.input;
+  };
+
+  const getValidationMessage = (gradeKey: string) => {
+    const invalidGrade = invalidGrades.get(gradeKey);
+    if (invalidGrade) {
+      return invalidGrade.value < 0
+        ? "Grade cannot be negative"
+        : `Grade cannot exceed ${invalidGrade.maxMarks} marks`;
+    }
+    return null;
+  };
+
+  const renderFinalGradeCell = (enrollment: Enrollment) => {
+    const gradeInfo = calculateGradeInfo(enrollment);
+
+    return (
+      <td className={`${styles.tableBodyCell} ${styles.finalGrade}`}>
+        <div className={styles.gradeInfoContainer}>
+          <div className={styles.currentGrade}>
+            {gradeInfo.finalGrade.toFixed(1)}%
+          </div>
+          {gradeInfo.isPartial && (
+            <div className={styles.gradeContext}>
+              <span className={styles.gradeNote}>
+                Based on {gradeInfo.gradedAssignments} of{" "}
+                {gradeInfo.totalAssignments} assignments (
+                {gradeInfo.weightedSoFar}% of {gradeInfo.totalWeight}% total
+                weight)
+              </span>
+              <span className={styles.maxGrade}>
+                Max possible: {gradeInfo.maxPossibleGrade.toFixed(1)}%
+              </span>
+            </div>
+          )}
+        </div>
+      </td>
+    );
   };
 
   return (
@@ -136,6 +242,10 @@ export default function GradesTable({
             checked={isEditing}
             onCheckedChange={(checked) => {
               if (!checked && editedGrades.size > 0) {
+                if (invalidGrades.size > 0) {
+                  alert("Please correct invalid grades before saving.");
+                  return;
+                }
                 const confirmSave = window.confirm(
                   "Would you like to save your changes?"
                 );
@@ -143,6 +253,7 @@ export default function GradesTable({
                   saveGrades();
                 } else {
                   setEditedGrades(new Map());
+                  setInvalidGrades(new Map());
                 }
               }
               setIsEditing(checked);
@@ -187,25 +298,34 @@ export default function GradesTable({
                     grade !== undefined && grade !== null
                       ? ((grade / assignment.marks) * 100).toFixed(1)
                       : "-";
+                  const validationMessage = getValidationMessage(gradeKey);
 
                   return (
                     <td key={assignment.id} className={styles.tableBodyCell}>
                       {isEditing ? (
-                        <input
-                          type="number"
-                          className={styles.input}
-                          value={editedGrades.get(gradeKey) ?? grade ?? ""}
-                          onChange={(e) =>
-                            handleGradeChange(
-                              enrollment.student_id,
-                              assignment.id,
-                              e.target.value
-                            )
-                          }
-                          min={0}
-                          max={assignment.marks}
-                          step="0.1"
-                        />
+                        <div className={styles.gradeInputContainer}>
+                          <input
+                            type="number"
+                            className={getInputStyle(gradeKey, grade)}
+                            value={editedGrades.get(gradeKey) ?? grade ?? ""}
+                            onChange={(e) =>
+                              handleGradeChange(
+                                enrollment.student_id,
+                                assignment.id,
+                                e.target.value,
+                                assignment.marks
+                              )
+                            }
+                            min={0}
+                            max={assignment.marks}
+                            step="0.1"
+                          />
+                          {validationMessage && (
+                            <div className={styles.validationMessage}>
+                              {validationMessage}
+                            </div>
+                          )}
+                        </div>
                       ) : grade !== undefined && grade !== null ? (
                         <>
                           {grade}/{assignment.marks}
@@ -220,9 +340,7 @@ export default function GradesTable({
                     </td>
                   );
                 })}
-                <td className={`${styles.tableBodyCell} ${styles.finalGrade}`}>
-                  {calculateFinalGrade(enrollment).toFixed(1)}%
-                </td>
+                {renderFinalGradeCell(enrollment)}
               </tr>
             ))}
           </tbody>

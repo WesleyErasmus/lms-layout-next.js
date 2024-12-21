@@ -9,7 +9,6 @@
 }
 
 .headerTitle {
-  
 }
 
 .switchContainer {
@@ -78,4 +77,36 @@
   background-color: #ffffff;
   padding: 1rem;
   border-radius: 0.5rem;
+}
+
+.invalidInput {
+  background-color: #fee2e2;
+}
+
+.validationMessage {
+  color: #ef4444;
+  white-space: nowrap;
+}
+
+.currentGrade {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.gradeContext {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.gradeNote {
+  font-size: 0.75rem;
+  color: #666;
+  display: block;
+}
+
+.maxGrade {
+  font-size: 0.8rem;
+  color: #2563eb;
+  font-weight: 500;
 }
