@@ -26,6 +26,7 @@ interface GradeInfo {
   maxPossibleGrade: number;
   weightedSoFar: number;
   totalWeight: number;
+  accumulatedPercentage: number;
 }
 
 export default function GradesTable({
@@ -151,6 +152,7 @@ export default function GradesTable({
     let totalWeight = 0;
     let gradedAssignments = 0;
     let unaccountedWeight = 0;
+    let accumulatedPercentage = 0;
 
     initialAssignments.forEach((assignment) => {
       const gradeKey = `${enrollment.student_id}|${assignment.id}`;
@@ -161,6 +163,7 @@ export default function GradesTable({
         totalWeightedMarks += weightedGrade;
         totalWeight += assignment.weighting;
         gradedAssignments++;
+        accumulatedPercentage += weightedGrade;
       } else {
         unaccountedWeight += assignment.weighting;
       }
@@ -183,6 +186,7 @@ export default function GradesTable({
       maxPossibleGrade,
       weightedSoFar: totalWeight,
       totalWeight: totalWeight + unaccountedWeight,
+      accumulatedPercentage,
     };
   };
 
@@ -221,6 +225,9 @@ export default function GradesTable({
                 {gradeInfo.totalAssignments} assignments (
                 {gradeInfo.weightedSoFar}% of {gradeInfo.totalWeight}% total
                 weight)
+              </span>
+              <span className={styles.accumulatedGrade}>
+                Accumulated: {gradeInfo.accumulatedPercentage.toFixed(1)}%
               </span>
               <span className={styles.maxGrade}>
                 Max possible: {gradeInfo.maxPossibleGrade.toFixed(1)}%
@@ -305,7 +312,6 @@ export default function GradesTable({
                       {isEditing ? (
                         <div className={styles.gradeInputContainer}>
                           <input
-                            type="number"
                             className={getInputStyle(gradeKey, grade)}
                             value={editedGrades.get(gradeKey) ?? grade ?? ""}
                             onChange={(e) =>
