@@ -1,0 +1,24 @@
+.button {
+  padding: 6px 12px;
+  border-radius: 4px ;
+  cursor: pointer;
+}
+
+.primary {
+  background-color: lightskyblue;
+  color: #000;
+  border: none;
+}
+
+.primary:hover {
+  background-color: #fccd5b;
+}
+
+.secondary {
+  background-color: #fccd5b;
+  color: #1f2937;
+}
+
+.secondary:hover {
+  background-color: lightskyblue;
+}
