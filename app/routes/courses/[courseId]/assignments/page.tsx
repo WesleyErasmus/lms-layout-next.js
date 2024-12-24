@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import ExpandableAssignment from "@/app/components/ExpandableAssignment";
 import Dialog from "@/app/components/Dialog";
 import Button from "@/app/components/Button";
+import Switch from "@/app/components/Switch";
 import { supabase } from "@/lib/supabase/client";
 import type { Assignment } from "@/app/types/course.types";
 import styles from "./assignments.module.css";
@@ -14,8 +15,12 @@ export default function CourseAssignmentsPage({
   params: { courseId: string };
 }) {
   const courseId = use(params).courseId;
+  const [isEditing, setIsEditing] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [editedAssignments, setEditedAssignments] = useState(
+    new Map<string, Partial<Assignment>>()
+  );
   const [formData, setFormData] = useState({
     id: "",
     title: "",
@@ -26,6 +31,7 @@ export default function CourseAssignmentsPage({
     due_date: "",
   });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchAssignments = async () => {
@@ -51,6 +57,65 @@ export default function CourseAssignmentsPage({
       e.target.type === "number" ? Number(e.target.value) : e.target.value;
     setFormData((prev) => ({ ...prev, [e.target.name]: value }));
     setHasUnsavedChanges(true);
+  };
+
+  const handleEditChange = (
+    assignmentId: string,
+    field: string,
+    value: string | number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    e.stopPropagation();
+    setEditedAssignments((prev) => {
+      const newMap = new Map(prev);
+      const currentEdits = newMap.get(assignmentId) || {};
+      newMap.set(assignmentId, {
+        ...currentEdits,
+        [field]: value,
+      });
+      return newMap;
+    });
+  };
+
+  const saveEdits = async () => {
+    setSaving(true);
+    try {
+      const updates = Array.from(editedAssignments.entries()).map(
+        ([id, changes]) => {
+          const originalAssignment = assignments.find(
+            (assignment) => assignment.id === id
+          );
+
+          if (!originalAssignment) {
+            throw new Error(`Assignment with ID ${id} not found`);
+          }
+
+          return {
+            ...originalAssignment,
+            ...changes,
+          };
+        }
+      );
+
+      const { error } = await supabase.from("assignments").upsert(updates);
+
+      if (error) throw error;
+
+      const updatedAssignments = assignments.map((assignment) => {
+        const changes = editedAssignments.get(assignment.id);
+        return changes ? { ...assignment, ...changes } : assignment;
+      });
+
+      setAssignments(updatedAssignments);
+      setEditedAssignments(new Map());
+    } catch (error) {
+      console.error("Error saving assignments:", error);
+      alert(
+        "Failed to save assignments. Please check the console for details."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,22 +149,136 @@ export default function CourseAssignmentsPage({
     setHasUnsavedChanges(false);
   };
 
+  const renderEditableAssignment = (assignment: Assignment) => {
+    const editedValues = editedAssignments.get(assignment.id) || {};
+    const currentValues = {
+      ...assignment,
+      ...editedValues,
+    };
+
+    return {
+      ...currentValues,
+      title: (
+        <input
+          className={styles.editInput}
+          value={currentValues.title}
+          onChange={(e) => {
+            e.stopPropagation();
+            handleEditChange(assignment.id, "title", e.target.value, e);
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      ),
+      description: (
+        <input
+          className={styles.editInput}
+          value={currentValues.description || ""}
+          onChange={(e) => {
+            e.stopPropagation();
+            handleEditChange(assignment.id, "description", e.target.value, e);
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      ),
+      brief: (
+        <input
+          className={styles.editInput}
+          value={currentValues.brief || ""}
+          onChange={(e) => {
+            e.stopPropagation();
+            handleEditChange(assignment.id, "brief", e.target.value, e);
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      ),
+      marks: (
+        <input
+          className={styles.editInput}
+          type="number"
+          value={currentValues.marks}
+          onChange={(e) => {
+            e.stopPropagation();
+            handleEditChange(assignment.id, "marks", Number(e.target.value), e);
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      ),
+      weighting: (
+        <input
+          className={styles.editInput}
+          type="number"
+          value={currentValues.weighting}
+          onChange={(e) => {
+            e.stopPropagation();
+            handleEditChange(
+              assignment.id,
+              "weighting",
+              Number(e.target.value),
+              e
+            );
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      ),
+      due_date: (
+        <input
+          className={styles.editInput}
+          type="date"
+          value={currentValues.due_date || ""}
+          onChange={(e) => {
+            e.stopPropagation();
+            handleEditChange(assignment.id, "due_date", e.target.value, e);
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      ),
+    };
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Assignments</h1>
-        <Button onClick={() => setIsDialogOpen(true)}>Create Assignment</Button>
+        <div className={styles.controls}>
+          <div className={styles.switchContainer}>
+            <span>Edit Mode</span>
+            <Switch
+              checked={isEditing}
+              onCheckedChange={(checked) => {
+                if (!checked && editedAssignments.size > 0) {
+                  const confirmSave = window.confirm(
+                    "Would you like to save your changes?"
+                  );
+                  if (confirmSave) {
+                    saveEdits();
+                  } else {
+                    setEditedAssignments(new Map());
+                  }
+                }
+                setIsEditing(checked);
+              }}
+            />
+          </div>
+          <Button onClick={() => setIsDialogOpen(true)}>
+            Create Assignment
+          </Button>
+        </div>
       </div>
 
       {assignments.map((assignment) => (
         <ExpandableAssignment
           key={assignment.id}
-          assignment={{
-            ...assignment,
-            dueDate: assignment.due_date
-              ? new Date(assignment.due_date)
-              : undefined,
-          }}
+          assignment={
+            isEditing
+              ? renderEditableAssignment(assignment)
+              : {
+                  ...assignment,
+                  dueDate: assignment.due_date
+                    ? new Date(assignment.due_date)
+                    : undefined,
+                }
+          }
+          forceExpanded={isEditing}
         />
       ))}
 
@@ -183,6 +362,12 @@ export default function CourseAssignmentsPage({
           <Button type="submit">Create</Button>
         </form>
       </Dialog>
+
+      {saving && (
+        <div className={styles.savingOverlay}>
+          <div className={styles.savingMessage}>Saving assignments...</div>
+        </div>
+      )}
     </div>
   );
 }

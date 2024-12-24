@@ -21,7 +21,7 @@ const CourseNavbar = ({ courseId }: { courseId: string }) => {
         </ul>
       </div>
       <div className={styles.navButtons}>
-        <button className={styles.editAssignments}>Edit Assignments</button>
+        {/* <button className={styles.editAssignments}>Edit Assignments</button> */}
         <button className={styles.settingsButton}>Course Settings</button>
       </div>
     </nav>
