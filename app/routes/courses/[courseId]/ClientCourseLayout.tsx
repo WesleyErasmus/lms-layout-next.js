@@ -11,18 +11,17 @@ export default function ClientCourseLayout({
   children: React.ReactNode;
   course: { id: string; title: string };
 }) {
-  const { setCourse } = useCourse();
+  const { setCourse, clearCourse } = useCourse();
 
   useEffect(() => {
     setCourse(course.id, course.title);
-  }, [course, setCourse]);
+    return () => {
+      clearCourse();
+    };
+  }, [course, setCourse, clearCourse]);
 
   return (
     <div className={styles.container}>
-      {/* <header className={styles.headerSection}>
-        <h1 className={styles.courseTitle}>{course.title}</h1>
-        <span className={styles.courseId}>Course ID: {course.id}</span>
-      </header> */}
       <CourseNavbar courseId={course.id} />
       {children}
     </div>

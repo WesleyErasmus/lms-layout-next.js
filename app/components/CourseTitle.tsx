@@ -7,10 +7,12 @@ export default function CourseTitle() {
   const { courseTitle, courseId } = useCourse();
   return (
     <div>
-      <h2 className={styles.courseTitle}>
-        {courseTitle || null} |{" "}
-        <span className={styles.courseId}>{courseId || null}</span>
-      </h2>
+      {courseTitle ? (
+        <h2 className={styles.courseTitle}>
+          {courseTitle} |{" "}
+          <span className={styles.courseId}>{courseId}</span>
+        </h2>
+      ) : null}
     </div>
   );
 }
