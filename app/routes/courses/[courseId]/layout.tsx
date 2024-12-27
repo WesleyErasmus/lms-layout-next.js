@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase/client";
 import { notFound } from "next/navigation";
-import styles from "./layout.module.css";
-import CourseNavbar from "@/app/components/CourseNavbar";
+import ClientCourseLayout from "./ClientCourseLayout";
 
 export default async function CourseLayout({
   children,
@@ -10,8 +9,7 @@ export default async function CourseLayout({
   children: React.ReactNode;
   params: { courseId: string };
 }) {
-  
-  const { courseId } = await params;
+  const { courseId } = params;
 
   const { data: course, error } = await supabase
     .from("courses")
@@ -24,14 +22,5 @@ export default async function CourseLayout({
     notFound();
   }
 
-  return (
-    <div className={styles.container}>
-      <header className={styles.headerSection}>
-        <h1 className={styles.courseTitle}>{course.title}</h1>
-        <span className={styles.courseId}>Course ID: {course.id}</span>
-      </header>
-      <CourseNavbar courseId={course.id} />
-      {children}
-    </div>
-  );
+  return <ClientCourseLayout course={course}>{children}</ClientCourseLayout>;
 }

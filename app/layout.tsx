@@ -5,6 +5,8 @@ import "./styles/variables.css";
 import styles from "./layout.module.css";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
+import CourseTitle from "./components/CourseTitle";
+import { CourseProvider } from "./contexts/CourseContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,60 +37,74 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <div className={styles.dashboardLayout}>
-          <aside className={styles.sidebar}>
-            <div className={styles.flexContainer}>
-              <div>
+        <CourseProvider>
+          <div className={styles.dashboardLayout}>
+            <nav className={styles.navbar}>
+              <div className={styles.navbarInner}>
                 <div className={styles.jumbotron}>
                   <Link href="/" className={styles.sidebarTitle}>
                     <h1>Next.js LMS 🪐</h1>
                   </Link>
                 </div>
-                <nav className={styles.sidebarMenu}>
-                  {courses.map((course) => (
-                    <div key={course.id} className={styles.sidebarButton}>
-                      <Link
-                        className={styles.buttonCourseTitle}
-                        href={`/routes/courses/${course.id}/assignments`}
-                      >
-                        {course.title}
-                      </Link>
-                      <div className={styles.buttonSubLinksContainer}>
+                <div className={styles.navbarContentFlex}>
+                  <div>
+                    <CourseTitle />
+                  </div>
+                  <div className={styles.navbarRightMenu}>
+                    <div>Settings</div>
+                    <div>Profile</div>
+                  </div>
+                </div>
+              </div>
+            </nav>
+            <aside className={styles.sidebar}>
+              <div className={styles.flexContainer}>
+                <div>
+                  <nav className={styles.sidebarMenu}>
+                    {courses.map((course) => (
+                      <div key={course.id} className={styles.sidebarButton}>
                         <Link
+                          className={styles.buttonCourseTitle}
                           href={`/routes/courses/${course.id}/assignments`}
-                          className={styles.buttonLinks}
                         >
-                          <span>Assignments</span>
+                          {course.title}
                         </Link>
-                        <span>{" | "}</span>
-                        <Link
-                          href={`/routes/courses/${course.id}/grades`}
-                          className={styles.buttonLinks}
-                        >
-                          
-                          <span>Grades</span>
-                        </Link>
+                        <div className={styles.buttonSubLinksContainer}>
+                          <Link
+                            href={`/routes/courses/${course.id}/assignments`}
+                            className={styles.buttonLinks}
+                          >
+                            <span>Assignments</span>
+                          </Link>
+                          <span>{" | "}</span>
+                          <Link
+                            href={`/routes/courses/${course.id}/grades`}
+                            className={styles.buttonLinks}
+                          >
+                            <span>Grades</span>
+                          </Link>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </nav>
+                    ))}
+                  </nav>
+                </div>
+                <div className={styles.buttonGroup}>
+                  <button
+                    className={`${styles.sidebarButton} ${styles.accountButton}`}
+                  >
+                    Students
+                  </button>
+                  <button
+                    className={`${styles.sidebarButton} ${styles.logoutButton}`}
+                  >
+                    Messages
+                  </button>
+                </div>
               </div>
-              <div className={styles.buttonGroup}>
-                <button
-                  className={`${styles.sidebarButton} ${styles.accountButton}`}
-                >
-                  Account
-                </button>
-                <button
-                  className={`${styles.sidebarButton} ${styles.logoutButton}`}
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          </aside>
-          <main className={styles.dashboardContent}>{children}</main>
-        </div>
+            </aside>
+            <main className={styles.dashboardContent}>{children}</main>
+          </div>
+        </CourseProvider>
       </body>
     </html>
   );
