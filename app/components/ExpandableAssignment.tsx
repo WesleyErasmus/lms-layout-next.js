@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./ExpandableAssignment.module.css";
-import type { Assignment } from "../types/course.types";
+import type { Assignment, EditableAssignment } from "../types/course.type";
 
 interface ExpandableAssignmentProps {
-  assignment: Assignment;
+  assignment: Assignment | EditableAssignment;
+  forceExpanded?: boolean;
 }
 
 const ExpandableAssignment = ({ assignment }: ExpandableAssignmentProps) => {

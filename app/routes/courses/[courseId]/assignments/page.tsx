@@ -1,20 +1,24 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, Usable } from "react";
 import ExpandableAssignment from "@/app/components/ExpandableAssignment";
 import Dialog from "@/app/components/Dialog";
 import Button from "@/app/components/Button";
 import Switch from "@/app/components/Switch";
 import { supabase } from "@/lib/supabase/client";
-import type { Assignment } from "@/app/types/course.types";
+import type { Assignment, EditableAssignment } from "@/app/types/course.type";
 import styles from "./assignments.module.css";
+
+type CourseParams = {
+  courseId: string;
+};
 
 export default function CourseAssignmentsPage({
   params,
 }: {
-  params: { courseId: string };
+  params: Usable<CourseParams>;
 }) {
-  const courseId = use(params).courseId;
+  const courseId = (use(params) as { courseId: string }).courseId;
   const [isEditing, setIsEditing] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -224,7 +228,11 @@ export default function CourseAssignmentsPage({
         <input
           className={styles.editInput}
           type="date"
-          value={currentValues.due_date || ""}
+          value={
+            currentValues.due_date
+              ? new Date(currentValues.due_date).toISOString().split("T")[0]
+              : ""
+          }
           onChange={(e) => {
             e.stopPropagation();
             handleEditChange(assignment.id, "due_date", e.target.value, e);
@@ -270,7 +278,7 @@ export default function CourseAssignmentsPage({
           key={assignment.id}
           assignment={
             isEditing
-              ? renderEditableAssignment(assignment)
+              ? (renderEditableAssignment(assignment) as EditableAssignment)
               : {
                   ...assignment,
                   dueDate: assignment.due_date

@@ -1,4 +1,3 @@
-// layout.tsx
 import { supabase } from "@/lib/supabase/client";
 import { notFound } from "next/navigation";
 import styles from "./layout.module.css";

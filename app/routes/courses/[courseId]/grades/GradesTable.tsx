@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import Switch from "@/app/components/Switch";
 import styles from "./GradesTable.module.css";
-import type { Assignment, Enrollment, Grade } from "@/app/types/course.types";
+import type { Assignment, Enrollment, Grade } from "@/app/types/course.type";
 
 interface GradesTableProps {
   initialAssignments: Assignment[];

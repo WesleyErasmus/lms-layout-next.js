@@ -1,3 +1,5 @@
+import { JSX } from "react";
+
 export interface Assignment {
   id: string;
   title: string;
@@ -7,6 +9,19 @@ export interface Assignment {
   dueDate?: Date
   brief: string
   description: string
+}
+
+export interface EditableAssignment
+  extends Omit<
+    Assignment,
+    "title" | "marks" | "weighting" | "due_date" | "brief" | "description"
+  > {
+  title: JSX.Element;
+  marks: JSX.Element;
+  weighting: JSX.Element;
+  due_date: JSX.Element;
+  brief: JSX.Element;
+  description: JSX.Element;
 }
 
 export interface Student {

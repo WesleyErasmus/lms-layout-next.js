@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
 import { notFound } from "next/navigation";
 import styles from "./students.module.css";
-import type { Student } from "@/app/types/course.types";
+import type { Student } from "@/app/types/course.type";
 
 interface EnrollmentWithStudent {
   students: Student;
