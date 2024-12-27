@@ -12,6 +12,8 @@ export default async function CourseStudentsPage({
 }: {
   params: { courseId: string };
 }) {
+  const { courseId } = await params;
+
   const { data: enrollments, error } = await supabase
     .from("enrollments")
     .select(
@@ -19,7 +21,7 @@ export default async function CourseStudentsPage({
       students(id, first_name, last_name, email)
     `
     )
-    .eq("course_id", params.courseId)
+    .eq("course_id", courseId)
     .returns<EnrollmentWithStudent[]>();
 
   if (error || !enrollments) {
@@ -31,6 +33,14 @@ export default async function CourseStudentsPage({
     <div>
       <h1 className={styles.heading}>Students</h1>
       <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Avatar</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
         <tbody>
           {enrollments.map((enrollment) => {
             const student = enrollment.students;

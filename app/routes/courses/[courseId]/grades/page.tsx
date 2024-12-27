@@ -4,9 +4,11 @@ import GradesTable from "./GradesTable";
 import type { PageParams } from "@/app/types/params";
 
 export default async function CourseGradesPage({ params }: PageParams) {
+  const { courseId } = await params;
+
   const [assignmentsResult, enrollmentsResult, gradesResult] =
     await Promise.all([
-      supabase.from("assignments").select("*").eq("course_id", params.courseId),
+      supabase.from("assignments").select("*").eq("course_id", courseId),
 
       supabase
         .from("enrollments")
@@ -21,7 +23,7 @@ export default async function CourseGradesPage({ params }: PageParams) {
         )
       `
         )
-        .eq("course_id", params.courseId),
+        .eq("course_id", courseId),
 
       supabase.from("grades").select("*"),
     ]);
@@ -46,7 +48,7 @@ export default async function CourseGradesPage({ params }: PageParams) {
         initialAssignments={assignmentsResult.data}
         initialEnrollments={enrollmentsResult.data}
         initialGrades={gradesResult.data || []}
-        courseId={params.courseId}
+        courseId={courseId}
       />
     </div>
   );

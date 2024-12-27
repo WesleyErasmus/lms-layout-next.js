@@ -1,8 +1,8 @@
+// layout.tsx
 import { supabase } from "@/lib/supabase/client";
 import { notFound } from "next/navigation";
 import styles from "./layout.module.css";
 import CourseNavbar from "@/app/components/CourseNavbar";
-// import type { PageParams } from "@/app/types/params";
 
 export default async function CourseLayout({
   children,
@@ -11,10 +11,13 @@ export default async function CourseLayout({
   children: React.ReactNode;
   params: { courseId: string };
 }) {
+  
+  const { courseId } = await params;
+
   const { data: course, error } = await supabase
     .from("courses")
     .select("*")
-    .eq("id", params.courseId)
+    .eq("id", courseId)
     .single();
 
   if (error || !course) {
