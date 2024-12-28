@@ -19,9 +19,7 @@ interface CourseWithDetails {
     marks: number;
     weighting: number;
     due_date: string;
-    grades: {
-      marks_achieved: number | null;
-    }[];
+    grade: number | null;
   }[];
 }
 
@@ -32,16 +30,6 @@ interface EnrollmentResponse {
     id: string;
     title: string;
     description: string;
-    assignments: {
-      id: string;
-      title: string;
-      marks: number;
-      weighting: number;
-      due_date: string;
-      grades: {
-        marks_achieved: number | null;
-      }[];
-    }[];
   };
 }
 
@@ -53,7 +41,7 @@ export default function StudentCourses({ studentId }: StudentCourseProps) {
   useEffect(() => {
     async function fetchStudentCourses() {
       try {
-        const { data, error } = await supabase
+        const { data: enrollmentData, error: enrollmentError } = await supabase
           .from("enrollments")
           .select(
             `
@@ -62,40 +50,64 @@ export default function StudentCourses({ studentId }: StudentCourseProps) {
             courses (
               id,
               title,
-              description,
-              assignments (
-                id,
-                title,
-                marks,
-                weighting,
-                due_date,
-                grades (
-                  marks_achieved
-                )
-              )
+              description
             )
           `
           )
           .eq("student_id", studentId);
 
-        if (error) throw error;
+        if (enrollmentError) throw enrollmentError;
 
-        const enrollments = data as unknown as EnrollmentResponse[];
+        const enrollments = enrollmentData as unknown as EnrollmentResponse[];
 
-        const formattedCourses: CourseWithDetails[] = enrollments.map(
-          (enrollment) => ({
-            id: enrollment.courses.id,
-            title: enrollment.courses.title,
-            description: enrollment.courses.description,
-            enrolled_at: enrollment.enrolled_at,
-            assignments: enrollment.courses.assignments.map((assignment) => ({
-              ...assignment,
-              grades: assignment.grades.filter((grade) => grade !== null),
-            })),
+        const coursesWithDetails = await Promise.all(
+          enrollments.map(async (enrollment) => {
+            const { data: assignmentsData, error: assignmentsError } =
+              await supabase
+                .from("assignments")
+                .select(
+                  `
+                id,
+                title,
+                marks,
+                weighting,
+                due_date
+              `
+                )
+                .eq("course_id", enrollment.course_id);
+
+            if (assignmentsError) throw assignmentsError;
+            const assignmentsWithGrades = await Promise.all(
+              assignmentsData.map(async (assignment) => {
+                const { data: gradeData, error: gradeError } = await supabase
+                  .from("grades")
+                  .select("marks_achieved")
+                  .eq("assignment_id", assignment.id)
+                  .eq("student_id", studentId)
+                  .single();
+
+                if (gradeError && gradeError.code !== "PGRST116") {
+                  throw gradeError;
+                }
+
+                return {
+                  ...assignment,
+                  grade: gradeData?.marks_achieved ?? null,
+                };
+              })
+            );
+
+            return {
+              id: enrollment.courses.id,
+              title: enrollment.courses.title,
+              description: enrollment.courses.description,
+              enrolled_at: enrollment.enrolled_at,
+              assignments: assignmentsWithGrades,
+            };
           })
         );
 
-        setCourses(formattedCourses);
+        setCourses(coursesWithDetails);
       } catch (err) {
         console.error("Error fetching student courses:", err);
         setError("Failed to load student courses and grades");
@@ -112,9 +124,7 @@ export default function StudentCourses({ studentId }: StudentCourseProps) {
   const calculateCourseProgress = (
     assignments: CourseWithDetails["assignments"]
   ) => {
-    const completedAssignments = assignments.filter(
-      (a) => a.grades.length > 0 && a.grades[0]?.marks_achieved !== null
-    );
+    const completedAssignments = assignments.filter((a) => a.grade !== null);
     return {
       completed: completedAssignments.length,
       total: assignments.length,
@@ -129,13 +139,9 @@ export default function StudentCourses({ studentId }: StudentCourseProps) {
     let totalWeight = 0;
 
     assignments.forEach((assignment) => {
-      if (
-        assignment.grades.length > 0 &&
-        assignment.grades[0]?.marks_achieved !== null
-      ) {
+      if (assignment.grade !== null) {
         const score =
-          (assignment.grades[0].marks_achieved / assignment.marks) *
-          assignment.weighting;
+          (assignment.grade / assignment.marks) * assignment.weighting;
         totalWeightedScore += score;
         totalWeight += assignment.weighting;
       }
@@ -210,8 +216,8 @@ export default function StudentCourses({ studentId }: StudentCourseProps) {
                       <div className={styles.assignmentDetails}>
                         <span>Weight: {assignment.weighting}%</span>
                         <span>
-                          {assignment.grades[0]?.marks_achieved !== undefined
-                            ? `Score: ${assignment.grades[0].marks_achieved}/${assignment.marks}`
+                          {assignment.grade !== null
+                            ? `Score: ${assignment.grade}/${assignment.marks}`
                             : "Not graded"}
                         </span>
                       </div>
