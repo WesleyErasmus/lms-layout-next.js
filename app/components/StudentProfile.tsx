@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import styles from "./StudentProfile.module.css";
+import StudentCourses from "./StudentCourses";
 
 export interface StudentProfileProps {
   studentId: string;
@@ -88,6 +89,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
           </div>
         </div>
       </div>
+      <StudentCourses studentId={studentId} />
     </div>
   );
 }

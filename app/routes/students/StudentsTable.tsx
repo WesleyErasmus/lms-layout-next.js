@@ -33,7 +33,7 @@ export default function StudentsTable() {
   const router = useRouter();
 
   const handleProfileClick = (studentId: string) => {
-    router.push(`/students/${studentId}`);
+    router.push(`/routes/students/${studentId}`);
   };
 
   if (loading) {
