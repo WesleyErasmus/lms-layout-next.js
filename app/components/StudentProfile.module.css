@@ -1,0 +1,101 @@
+.profileContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.avatarContainer {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 4rem;
+  height: 4rem;
+  background-color: #fccd5b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.studentName {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.profileContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.infoSection {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.value {
+  font-size: 1rem;
+  color: #111827;
+}
+
+@media (max-width: 640px) {
+  .profileHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}

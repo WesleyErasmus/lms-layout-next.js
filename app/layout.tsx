@@ -89,11 +89,16 @@ export default async function RootLayout({
                   </nav>
                 </div>
                 <div className={styles.buttonGroup}>
-                  <button
-                    className={`${styles.sidebarButton} ${styles.accountButton}`}
+                  <Link
+                    href={`/routes/students`}
+                    className={styles.buttonCourseTitle}
                   >
-                    Students
-                  </button>
+                    <button
+                      className={`${styles.sidebarButton} ${styles.accountButton}`}
+                    >
+                      Students
+                    </button>
+                  </Link>
                   <button
                     className={`${styles.sidebarButton} ${styles.logoutButton}`}
                   >
