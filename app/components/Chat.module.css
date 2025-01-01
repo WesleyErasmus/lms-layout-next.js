@@ -1,0 +1,144 @@
+.chatContainer {
+  display: flex;
+  height: calc(100vh - 4rem);
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+.sidebar {
+  width: 300px;
+  border-right: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.sidebarHeader {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.toggleButton {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.toggleButton:hover {
+  background-color: #1d4ed8;
+}
+
+.conversationsList {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.conversationItem {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.conversationItem:hover {
+  background-color: #f3f4f6;
+}
+
+.conversationItem.active {
+  background-color: #eff6ff;
+}
+
+.conversationHeader {
+  font-weight: 500;
+  color: #111827;
+}
+
+.lastMessage {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.chatMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.messagesContainer {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.message {
+  max-width: 70%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.message.sent {
+  align-self: flex-end;
+  background-color: #2563eb;
+  color: white;
+}
+
+.message.received {
+  align-self: flex-start;
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.messageContent {
+  word-wrap: break-word;
+}
+
+.messageTime {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  opacity: 0.8;
+}
+
+.messageForm {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.messageInput {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.sendButton {
+  padding: 0.5rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sendButton:hover {
+  background-color: #1d4ed8;
+}
+
+.noChat {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
