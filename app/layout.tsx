@@ -5,7 +5,6 @@ import "./styles/variables.css";
 import styles from "./layout.module.css";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
-// import CourseTitle from "./components/CourseTitle";
 import { CourseProvider } from "./contexts/CourseContext";
 import { NavigationProvider } from "./contexts/NavigationContext";
 import Breadcrumbs from "./components/Breadcrumbs";
@@ -51,7 +50,6 @@ export default async function RootLayout({
                   </div>
                   <div className={styles.navbarContentFlex}>
                     <div>
-                      {/* <CourseTitle /> */}
                       <Breadcrumbs />
                     </div>
                     <div className={styles.navbarRightMenu}>
@@ -103,11 +101,16 @@ export default async function RootLayout({
                         Students
                       </button>
                     </Link>
-                    <button
-                      className={`${styles.sidebarButton} ${styles.logoutButton}`}
+                    <Link
+                      href={`/routes/chat`}
+                      className={styles.buttonCourseTitle}
                     >
-                      Messages
-                    </button>
+                      <button
+                        className={`${styles.sidebarButton} ${styles.logoutButton}`}
+                      >
+                        Messages
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </aside>

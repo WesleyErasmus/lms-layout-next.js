@@ -1,6 +1,6 @@
 .chatContainer {
   display: flex;
-  height: calc(100vh - 4rem);
+  height: 100%;
   background-color: white;
   border-radius: 0.5rem;
   overflow: hidden;
@@ -11,11 +11,15 @@
   width: 300px;
   border-right: 1px solid #e5e7eb;
   background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .sidebarHeader {
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
 }
 
 .toggleButton {
@@ -34,8 +38,9 @@
 }
 
 .conversationsList {
-  height: 100%;
+  flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .conversationItem {
@@ -67,6 +72,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .messagesContainer {
@@ -76,6 +83,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-height: 0;
 }
 
 .message {
@@ -111,6 +119,8 @@
   gap: 0.5rem;
   padding: 1rem;
   border-top: 1px solid #e5e7eb;
+  background-color: white;
+  flex-shrink: 0;
 }
 
 .messageInput {
