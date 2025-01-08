@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase/client";
 import styles from "./Chat.module.css";
+import CreateChannelModal from "./CreateChannelModal";
 import type {
   Student,
   Conversation,
@@ -19,6 +20,7 @@ export default function Chat({ currentUserId }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [showStudents, setShowStudents] = useState(false);
+  const [showCreateChannel, setShowCreateChannel] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,6 +34,9 @@ export default function Chat({ currentUserId }: ChatProps) {
               id,
               title,
               is_group,
+              channel_type,
+              description,
+              is_public,
               updated_at,
               conversation_participants!inner(
                 user_id,
@@ -54,7 +59,7 @@ export default function Chat({ currentUserId }: ChatProps) {
         if (conversationsResponse.error) throw conversationsResponse.error;
         if (studentsResponse.error) throw studentsResponse.error;
 
-        setConversations(conversationsResponse.data as Conversation[]);
+        setConversations(conversationsResponse.data);
         setStudents(studentsResponse.data);
         setShowStudents(!conversationsResponse.data.length);
       } catch (error) {
@@ -72,7 +77,13 @@ export default function Chat({ currentUserId }: ChatProps) {
       try {
         const { data, error } = await supabase
           .from("messages")
-          .select("*")
+          .select(
+            `
+            *,
+            sender:students(first_name, last_name),
+            reactions:message_reactions(*)
+          `
+          )
           .eq("conversation_id", currentConversation)
           .order("created_at", { ascending: true });
 
@@ -130,12 +141,25 @@ export default function Chat({ currentUserId }: ChatProps) {
     scrollToBottom();
 
     try {
-      await supabase.from("messages").insert({
+      const { data: senderData } = await supabase
+        .from("students")
+        .select("first_name, last_name")
+        .eq("id", currentUserId)
+        .single();
+
+      const { error } = await supabase.from("messages").insert({
         conversation_id: currentConversation,
         sender_id: currentUserId,
         content: tempMessage.content,
         status: "sent",
       });
+
+      if (error) throw error;
+
+      await supabase
+        .from("conversations")
+        .update({ updated_at: new Date().toISOString() })
+        .eq("id", currentConversation);
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages((current) =>
@@ -163,6 +187,7 @@ export default function Chat({ currentUserId }: ChatProps) {
         .insert({
           is_group: false,
           created_by: currentUserId,
+          updated_at: new Date().toISOString(),
         })
         .select()
         .single();
@@ -181,16 +206,57 @@ export default function Chat({ currentUserId }: ChatProps) {
     }
   };
 
+  const handleChannelCreated = async (channelId: string) => {
+    setShowCreateChannel(false);
+    setCurrentConversation(channelId);
+
+    const { data, error } = await supabase
+      .from("conversations")
+      .select(
+        `
+        id,
+        title,
+        is_group,
+        channel_type,
+        description,
+        is_public,
+        updated_at,
+        conversation_participants!inner(
+          user_id,
+          student:students!inner(
+            id,
+            first_name,
+            last_name,
+            email
+          )
+        )
+      `
+      )
+      .order("updated_at", { ascending: false });
+
+    if (!error && data) {
+      setConversations(data);
+    }
+  };
+
   return (
     <div className={styles.chatContainer}>
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
-          <button
-            className={styles.toggleButton}
-            onClick={() => setShowStudents(!showStudents)}
-          >
-            {showStudents ? "Show Conversations" : "New Chat"}
-          </button>
+          <div className={styles.buttonGroup}>
+            <button
+              className={styles.toggleButton}
+              onClick={() => setShowStudents(!showStudents)}
+            >
+              {showStudents ? "Show Conversations" : "New Chat"}
+            </button>
+            <button
+              className={styles.toggleButton}
+              onClick={() => setShowCreateChannel(true)}
+            >
+              Create Channel
+            </button>
+          </div>
         </div>
 
         <div className={styles.conversationsList}>
@@ -228,8 +294,15 @@ export default function Chat({ currentUserId }: ChatProps) {
                           )
                           .join(", ")}
                   </div>
-                  <div className={styles.lastMessage}>
-                    {new Date(conversation.updated_at).toLocaleDateString()}
+                  <div className={styles.conversationMeta}>
+                    {conversation.description && (
+                      <div className={styles.channelDescription}>
+                        {conversation.description}
+                      </div>
+                    )}
+                    <div className={styles.lastMessage}>
+                      {new Date(conversation.updated_at).toLocaleDateString()}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -249,10 +322,24 @@ export default function Chat({ currentUserId }: ChatProps) {
                       : styles.received
                   }`}
                 >
+                  {message.sender && (
+                    <div className={styles.messageSender}>
+                      {message.sender.first_name} {message.sender.last_name}
+                    </div>
+                  )}
                   <div className={styles.messageContent}>{message.content}</div>
                   <div className={styles.messageTime}>
                     {new Date(message.created_at).toLocaleTimeString()}
                   </div>
+                  {message.reactions && message.reactions.length > 0 && (
+                    <div className={styles.messageReactions}>
+                      {message.reactions.map((reaction) => (
+                        <span key={reaction.id} className={styles.reaction}>
+                          {reaction.reaction}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
               <div ref={messagesEndRef} />
@@ -278,6 +365,13 @@ export default function Chat({ currentUserId }: ChatProps) {
           </div>
         )}
       </main>
+
+      {showCreateChannel && (
+        <CreateChannelModal
+          onClose={() => setShowCreateChannel(false)}
+          onCreateSuccess={handleChannelCreated}
+        />
+      )}
     </div>
   );
 }

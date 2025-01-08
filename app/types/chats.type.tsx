@@ -10,10 +10,17 @@ interface Participant {
   student: Student;
 }
 
+export type ChannelType = "group" | "course";
+
 export interface Conversation {
   id: string;
   title: string | null;
+  description?: string | null;
   is_group: boolean;
+  is_public?: boolean;
+  channel_type?: ChannelType;
+  course_id?: string | null;
+  created_by?: string;
   updated_at: string;
   conversation_participants: Participant[];
 }
@@ -25,10 +32,40 @@ export interface Message {
   content: string;
   status: string;
   created_at: string;
+  sender?: {
+    first_name: string;
+    last_name: string;
+  };
+  reactions?: MessageReaction[];
 }
 
 export interface ChatProps {
   currentUserId: string;
+}
+
+export interface Course {
+  id: string;
+  title: string;
+  description: string;
+  students_count: number;
+}
+
+export interface MessageReaction {
+  id: string;
+  message_id: string;
+  user_id: string;
+  reaction: string;
+  created_at: string;
+}
+
+export interface ChannelInvite {
+  id: string;
+  channel_id: string;
+  inviter_id: string;
+  invitee_id: string;
+  status: "pending" | "accepted" | "rejected";
+  created_at: string;
+  expires_at: string;
 }
 
 // export type ChannelType = "direct" | "course" | "group";
@@ -96,17 +133,3 @@ export interface ChatProps {
 //   created_at: string;
 // }
 
-// export interface MessageReaction {
-//   id: string;
-//   message_id: string;
-//   user_id: string;
-//   reaction: string;
-//   created_at: string;
-// }
-
-// export interface Course {
-//   id: string;
-//   title: string;
-//   description: string;
-//   students_count: number;
-// }

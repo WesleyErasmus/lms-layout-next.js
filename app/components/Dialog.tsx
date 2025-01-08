@@ -1,4 +1,3 @@
-// Dialog.tsx
 import { useState, useEffect, type ReactNode } from "react";
 import styles from "./Dialog.module.css";
 
