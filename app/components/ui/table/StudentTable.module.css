@@ -1,0 +1,142 @@
+/* .container {
+} */
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  padding-bottom: 12px;
+}
+
+.tableContainer {
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+}
+
+.tableHeader {
+  background-color: #f8fafc;
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.tableCell {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+.table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.avatar {
+  background-color: #6366f1;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+}
+
+.fullName {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.email {
+  color: #6b7280;
+}
+
+.profileButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileButton:hover {
+  background-color: #f1f5f9;
+}
+
+.profileButton:focus {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+.profileIcon {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+  transition: color 0.2s ease-in-out;
+}
+
+.profileButton:hover .profileIcon {
+  color: #4f46e5;
+}
+
+.loading {
+  padding: 40px;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 500;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 16px;
+  }
+
+  .tableContainer {
+    border-radius: 8px;
+    overflow-x: auto;
+  }
+
+  .tableHeader,
+  .tableCell {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}

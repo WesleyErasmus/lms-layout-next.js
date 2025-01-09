@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import styles from "./StudentProfile.module.css";
 import StudentCourses from "./StudentCourses";
-import Switch from "@/app/components/Switch";
-import Button from "@/app/components/Button";
+import Switch from "@/app/components/ui/toggle/Switch";
+import Button from "@/app/components/ui/button/Button";
 
 export interface StudentProfileProps {
   studentId: string;

@@ -67,20 +67,20 @@ export default async function RootLayout({
                         <div key={course.id} className={styles.sidebarButton}>
                           <Link
                             className={styles.buttonCourseTitle}
-                            href={`/routes/courses/${course.id}/assignments`}
+                            href={`/courses/${course.id}/assignments`}
                           >
                             {course.title}
                           </Link>
                           <div className={styles.buttonSubLinksContainer}>
                             <Link
-                              href={`/routes/courses/${course.id}/assignments`}
+                              href={`/courses/${course.id}/assignments`}
                               className={styles.buttonLinks}
                             >
                               <span>Assignments</span>
                             </Link>
                             <span>{" | "}</span>
                             <Link
-                              href={`/routes/courses/${course.id}/grades`}
+                              href={`/courses/${course.id}/grades`}
                               className={styles.buttonLinks}
                             >
                               <span>Grades</span>
@@ -92,7 +92,7 @@ export default async function RootLayout({
                   </div>
                   <div className={styles.buttonGroup}>
                     <Link
-                      href={`/routes/students`}
+                      href={`/students`}
                       className={styles.buttonCourseTitle}
                     >
                       <button
@@ -102,7 +102,7 @@ export default async function RootLayout({
                       </button>
                     </Link>
                     <Link
-                      href={`/routes/chat`}
+                      href={`/chat`}
                       className={styles.buttonCourseTitle}
                     >
                       <button

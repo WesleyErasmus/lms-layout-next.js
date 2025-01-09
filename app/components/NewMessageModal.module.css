@@ -1,0 +1,97 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 0.5rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  padding: 1rem;
+  border-bottom: 1px solid #E8E8E8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1D1C1D;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #616061;
+  cursor: pointer;
+  padding: 0;
+}
+
+.closeButton:hover {
+  color: #1D1C1D;
+}
+
+.modalContent {
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.searchInput {
+  padding: 0.75rem;
+  border: 1px solid #BBBCBF;
+  border-radius: 0.375rem;
+  font-size: 0.9375rem;
+  width: 100%;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #1164A3;
+}
+
+.studentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.studentItem {
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.studentItem:hover {
+  background-color: #F8F8F8;
+}
+
+.studentName {
+  font-weight: 500;
+  color: #1D1C1D;
+}
+
+.studentEmail {
+  font-size: 0.875rem;
+  color: #616061;
+  margin-top: 0.25rem;
+}
