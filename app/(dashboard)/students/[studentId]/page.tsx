@@ -1,6 +1,5 @@
 
-import StudentProfile from "@/app/components/StudentProfile";
-import styles from "./page.module.css";
+import StudentProfile from "@/app/(dashboard)/students/components/StudentProfile";
 
 export default function StudentProfilePage({
   params,
@@ -8,7 +7,7 @@ export default function StudentProfilePage({
   params: { studentId: string };
 }) {
   return (
-    <div className={styles.pageContainer}>
+    <div>
       <StudentProfile studentId={params.studentId} />
     </div>
   );

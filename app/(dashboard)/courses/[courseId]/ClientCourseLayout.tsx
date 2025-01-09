@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useCourse } from "@/app/contexts/CourseContext";
 import styles from "./layout.module.css";
-import CourseNavbar from "@/app/components/layout/courses/CourseNavbar";
+import CourseNavbar from "@/app/(dashboard)/courses/components/CourseNavbar";
 
 export default function ClientCourseLayout({
   children,

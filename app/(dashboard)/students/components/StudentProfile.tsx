@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import styles from "./StudentProfile.module.css";
-import StudentCourses from "./StudentCourses";
+import StudentCourses from "../../../components/StudentCourses";
 import Switch from "@/app/components/ui/toggle/Switch";
 import Button from "@/app/components/ui/button/Button";
 

@@ -1,13 +1,13 @@
-"use client";
 
+"use client"
 import { useState, useEffect, use, Usable } from "react";
-import ExpandableAssignment from "@/app/components/ExpandableAssignment";
-import CreateAssessmentDialog from "@/app/components/ui/dialog/CreateAssessmentDialog";
+import AssignmentCard from "@/app/(dashboard)/courses/[courseId]/assignments/components/AssignmentCard";
+import CreateAssessmentDialog from "@/app/(dashboard)/courses/[courseId]/assignments/components/CreateAssessmentDialog";
 import Button from "@/app/components/ui/button/Button";
 import Switch from "@/app/components/ui/toggle/Switch";
 import { supabase } from "@/lib/supabase/client";
 import type { Assignment, EditableAssignment } from "@/app/types/course.type";
-import styles from "./assignments.module.css";
+import styles from "./page.module.css";
 
 type CourseParams = {
   courseId: string;
@@ -25,16 +25,6 @@ export default function CourseAssignmentsPage({
   const [editedAssignments, setEditedAssignments] = useState(
     new Map<string, Partial<Assignment>>()
   );
-  const [formData, setFormData] = useState({
-    id: "",
-    title: "",
-    description: "",
-    brief: "",
-    marks: 0,
-    weighting: 0,
-    due_date: "",
-  });
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -55,13 +45,6 @@ export default function CourseAssignmentsPage({
 
     fetchAssignments();
   }, [courseId]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value =
-      e.target.type === "number" ? Number(e.target.value) : e.target.value;
-    setFormData((prev) => ({ ...prev, [e.target.name]: value }));
-    setHasUnsavedChanges(true);
-  };
 
   const handleEditChange = (
     assignmentId: string,
@@ -122,35 +105,8 @@ export default function CourseAssignmentsPage({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const { data, error } = await supabase
-      .from("assignments")
-      .insert({
-        ...formData,
-        course_id: courseId,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error creating assignment:", error);
-      return;
-    }
-
-    setAssignments((prev) => [...prev, data]);
-    setIsDialogOpen(false);
-    setFormData({
-      id: "",
-      title: "",
-      description: "",
-      brief: "",
-      marks: 0,
-      weighting: 0,
-      due_date: "",
-    });
-    setHasUnsavedChanges(false);
+  const handleAssignmentCreated = (newAssignment: Assignment) => {
+    setAssignments((prev) => [...prev, newAssignment]);
   };
 
   const renderEditableAssignment = (assignment: Assignment) => {
@@ -238,6 +194,13 @@ export default function CourseAssignmentsPage({
             handleEditChange(assignment.id, "due_date", e.target.value, e);
           }}
           onClick={(e) => e.stopPropagation()}
+          style={{
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            width: "100%",
+            cursor: "pointer",
+          }}
         />
       ),
     };
@@ -274,7 +237,7 @@ export default function CourseAssignmentsPage({
       </div>
 
       {assignments.map((assignment) => (
-        <ExpandableAssignment
+        <AssignmentCard
           key={assignment.id}
           assignment={
             isEditing
@@ -286,90 +249,15 @@ export default function CourseAssignmentsPage({
                     : undefined,
                 }
           }
-          forceExpanded={isEditing}
         />
       ))}
 
       <CreateAssessmentDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
-        title="Create Assignment"
-        hasUnsavedChanges={hasUnsavedChanges}
-      >
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.formGroup}>
-            <label htmlFor="id">Assignment ID</label>
-            <input
-              id="id"
-              name="id"
-              value={formData.id}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="title">Title</label>
-            <input
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="description">Description</label>
-            <input
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="brief">Brief</label>
-            <input
-              id="brief"
-              name="brief"
-              value={formData.brief}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="marks">Marks</label>
-            <input
-              id="marks"
-              name="marks"
-              type="number"
-              value={formData.marks}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="weighting">Weighting</label>
-            <input
-              id="weighting"
-              name="weighting"
-              type="number"
-              value={formData.weighting}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="due_date">Due Date</label>
-            <input
-              id="due_date"
-              name="due_date"
-              type="date"
-              value={formData.due_date}
-              onChange={handleInputChange}
-            />
-          </div>
-          <Button type="submit">Create</Button>
-        </form>
-      </CreateAssessmentDialog>
+        courseId={courseId}
+        onAssignmentCreated={handleAssignmentCreated}
+      />
 
       {saving && (
         <div className={styles.savingOverlay}>

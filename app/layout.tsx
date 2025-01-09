@@ -73,10 +73,10 @@ export default async function RootLayout({
                           </Link>
                           <div className={styles.buttonSubLinksContainer}>
                             <Link
-                              href={`/courses/${course.id}/assignments`}
+                              href={`/courses/${course.id}/students`}
                               className={styles.buttonLinks}
                             >
-                              <span>Assignments</span>
+                              <span>Students</span>
                             </Link>
                             <span>{" | "}</span>
                             <Link
