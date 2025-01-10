@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { Course } from "@/app/types/chats.type";
-import styles from "./CreateChannelDialog.module.css";
+import styles from "../styles/CreateChannelDialog.module.css";
 
 interface CreateChannelDialogProps {
   onClose: () => void;

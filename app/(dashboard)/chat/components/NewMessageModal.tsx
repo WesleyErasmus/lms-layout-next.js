@@ -1,6 +1,6 @@
 import { useState } from "react";
-import styles from "./NewMessageModal.module.css";
-import type { Student } from "../types/chats.type";
+import styles from "../styles/NewMessageModal.module.css";
+import type { Student } from "@/app/types/chats.type";
 
 interface NewMessageModalProps {
   students: Student[];

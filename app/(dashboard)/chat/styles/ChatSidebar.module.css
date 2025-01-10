@@ -1,0 +1,69 @@
+.header {
+  padding: 1rem;
+  border-bottom: 1px solid #2b2b2b;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.button {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1164A3;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #0A568C;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.sectionHeader {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  padding: 0.375rem 1rem;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.item:hover {
+  background-color: #0A568C;
+  color: #FFFFFF;
+}
+
+.item.active {
+  background-color: #1164A3;
+  color: #FFFFFF;
+}

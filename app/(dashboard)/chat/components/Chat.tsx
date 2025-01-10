@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
-import styles from "./Chat.module.css";
-import NewMessageModal from "../../../components/NewMessageModal";
-import CreateChannelDialog from "../../../components/ui/dialog/CreateChannelDialog";
+import ChatLayout from "./ChatLayout";
+import ChatSidebar from "./ChatSidebar";
+import ChatContent from "./ChatContent";
+import CreateChannelDialog from "./CreateChannelDialog";
+import NewMessageModal from "./NewMessageModal";
 import type {
   Student,
   Conversation,
@@ -22,116 +24,60 @@ export default function Chat({ currentUserId }: ChatProps) {
   const [newMessage, setNewMessage] = useState("");
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [showCreateChannel, setShowCreateChannel] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const [conversationsResponse, studentsResponse] = await Promise.all([
-  //         supabase
-  //           .from("conversations")
-  //           .select(
-  //             `
-  //             id,
-  //             title,
-  //             is_group,
-  //             channel_type,
-  //             description,
-  //             is_public,
-  //             updated_at,
-  //             conversation_participants!inner(
-  //               user_id,
-  //               student:students!inner(
-  //                 id,
-  //                 first_name,
-  //                 last_name,
-  //                 email
-  //               )
-  //             )
-  //           `
-  //           )
-  //           .order("updated_at", { ascending: false }),
-  //         supabase
-  //           .from("students")
-  //           .select("id, first_name, last_name, email")
-  //           .order("first_name"),
-  //       ]);
-
-  //       if (conversationsResponse.error) throw conversationsResponse.error;
-  //       if (studentsResponse.error) throw studentsResponse.error;
-
-  //       setConversations(conversationsResponse.data);
-  //       setStudents(studentsResponse.data);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         console.log("Fetching data for currentUserId:", currentUserId);
 
-        // First, let's check all conversations
         const { data: allConversations, error: convError } = await supabase
           .from("conversations")
           .select(
             `
-            id,
-            title,
-            is_group,
-            channel_type,
-            description,
-            is_public,
-            updated_at,
-            conversation_participants (
-              user_id,
-              student:students (
-                id,
-                first_name,
-                last_name,
-                email
-              )
+          id,
+          title,
+          is_group,
+          channel_type,
+          description,
+          is_public,
+          updated_at,
+          conversation_participants (
+            user_id,
+            student:students (
+              id,
+              first_name,
+              last_name,
+              email
             )
-          `
+          )
+        `
           )
           .order("updated_at", { ascending: false });
 
-        console.log("All conversations:", allConversations);
-        console.log("Conversations error:", convError);
-
         if (convError) throw convError;
 
-        // Filter conversations based on access
+        const typedConversations =
+          allConversations as unknown as Conversation[];
+
         const accessibleConversations =
-          allConversations?.filter((conv) => {
-            // Public channels are accessible to all
+          typedConversations?.filter((conv) => {
             if (conv.is_group && conv.is_public) return true;
 
-            // Check if user is a participant
             return conv.conversation_participants.some(
               (participant) => participant.user_id === currentUserId
             );
           }) || [];
 
-        console.log("Accessible conversations:", accessibleConversations);
-
         setConversations(accessibleConversations);
 
-        // Fetch students
         const { data: studentsData, error: studentsError } = await supabase
           .from("students")
           .select("id, first_name, last_name, email")
           .order("first_name");
 
         if (studentsError) throw studentsError;
-        console.log("Students data:", studentsData);
 
-        setStudents(studentsData || []);
+        setStudents((studentsData as Student[]) || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -139,18 +85,6 @@ export default function Chat({ currentUserId }: ChatProps) {
 
     fetchData();
   }, [currentUserId]);
-
-  //  useEffect(() => {
-  //    console.log("Conversations state updated:", conversations);
-  //    console.log(
-  //      "Channels:",
-  //      conversations.filter((conv) => conv.is_group)
-  //    );
-  //    console.log(
-  //      "Direct Messages:",
-  //      conversations.filter((conv) => !conv.is_group)
-  //    );
-  //  }, [conversations]);
 
   useEffect(() => {
     if (!currentConversation) return;
@@ -171,7 +105,6 @@ export default function Chat({ currentUserId }: ChatProps) {
 
         if (error) throw error;
         setMessages(data || []);
-        scrollToBottom();
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -191,7 +124,6 @@ export default function Chat({ currentUserId }: ChatProps) {
         },
         (payload) => {
           setMessages((current) => [...current, payload.new as Message]);
-          scrollToBottom();
         }
       )
       .subscribe();
@@ -200,10 +132,6 @@ export default function Chat({ currentUserId }: ChatProps) {
       supabase.removeChannel(channel);
     };
   }, [currentConversation]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -220,7 +148,6 @@ export default function Chat({ currentUserId }: ChatProps) {
 
     setMessages((current) => [...current, tempMessage]);
     setNewMessage("");
-    scrollToBottom();
 
     try {
       const { error } = await supabase.from("messages").insert({
@@ -246,16 +173,41 @@ export default function Chat({ currentUserId }: ChatProps) {
 
   const handleNewMessageCreated = async (recipientId: string) => {
     try {
-      const { data: existingConversation } = await supabase
-        .from("conversations")
-        .select("id")
-        .eq("is_group", false)
-        .contains("participant_ids", [currentUserId, recipientId]);
+      const { data: sharedConversations, error: fetchError } = await supabase
+        .from("conversation_participants")
+        .select(
+          `
+        conversation_id,
+        conversations!inner (
+          is_group,
+          id
+        )
+      `
+        )
+        .eq("user_id", currentUserId)
+        .eq("conversations.is_group", false);
 
-      if (existingConversation?.length) {
-        setCurrentConversation(existingConversation[0].id);
-        setShowNewMessageModal(false);
-        return;
+      if (fetchError) throw fetchError;
+
+      if (sharedConversations && sharedConversations.length > 0) {
+        const conversationIds = sharedConversations.map(
+          (c) => c.conversation_id
+        );
+
+        const { data: existingConversation, error: checkError } = await supabase
+          .from("conversation_participants")
+          .select("conversation_id")
+          .eq("user_id", recipientId)
+          .in("conversation_id", conversationIds)
+          .single();
+
+        if (checkError && checkError.code !== "PGRST116") throw checkError; // PGRST116 means no rows returned
+
+        if (existingConversation) {
+          setCurrentConversation(existingConversation.conversation_id);
+          setShowNewMessageModal(false);
+          return;
+        }
       }
 
       const { data: newConversation, error: conversationError } = await supabase
@@ -270,16 +222,37 @@ export default function Chat({ currentUserId }: ChatProps) {
 
       if (conversationError) throw conversationError;
 
-      await supabase.from("conversation_participants").insert([
-        { conversation_id: newConversation.id, user_id: currentUserId },
-        { conversation_id: newConversation.id, user_id: recipientId },
-      ]);
+      const now = new Date().toISOString();
+      const { error: participantsError } = await supabase
+        .from("conversation_participants")
+        .insert([
+          {
+            conversation_id: newConversation.id,
+            user_id: currentUserId,
+            joined_at: now,
+            last_read_at: now,
+          },
+          {
+            conversation_id: newConversation.id,
+            user_id: recipientId,
+            joined_at: now,
+            last_read_at: now,
+          },
+        ]);
+
+      if (participantsError) {
+        await supabase
+          .from("conversations")
+          .delete()
+          .eq("id", newConversation.id);
+        throw participantsError;
+      }
 
       setCurrentConversation(newConversation.id);
       setShowNewMessageModal(false);
       await refreshConversations();
     } catch (error) {
-      console.error("Error creating conversation:", error);
+      console.error("Error managing conversation:", error);
     }
   };
 
@@ -290,10 +263,11 @@ export default function Chat({ currentUserId }: ChatProps) {
   };
 
   const refreshConversations = async () => {
-    const { data: updatedConversations } = await supabase
-      .from("conversations")
-      .select(
-        `
+    try {
+      const { data, error } = await supabase
+        .from("conversations")
+        .select(
+          `
         id,
         title,
         is_group,
@@ -301,9 +275,9 @@ export default function Chat({ currentUserId }: ChatProps) {
         description,
         is_public,
         updated_at,
-        conversation_participants!inner(
+        conversation_participants!inner (
           user_id,
-          student:students!inner(
+          student:students!inner (
             id,
             first_name,
             last_name,
@@ -311,129 +285,53 @@ export default function Chat({ currentUserId }: ChatProps) {
           )
         )
       `
-      )
-      .order("updated_at", { ascending: false });
+        )
+        .order("updated_at", { ascending: false });
 
-    if (updatedConversations) {
-      setConversations(updatedConversations);
+      if (error) throw error;
+
+      const typedConversations = data as unknown as Conversation[];
+
+      if (typedConversations) {
+        setConversations(typedConversations);
+      }
+    } catch (error) {
+      console.error("Error refreshing conversations:", error);
     }
   };
 
   const channels = conversations.filter((conv) => conv.is_group);
   const directMessages = conversations.filter((conv) => !conv.is_group);
 
+  const sidebar = (
+    <ChatSidebar
+      channels={channels}
+      directMessages={directMessages}
+      currentConversation={currentConversation}
+      currentUserId={currentUserId}
+      onConversationSelect={setCurrentConversation}
+      onNewMessage={() => setShowNewMessageModal(true)}
+      onNewChannel={() => setShowCreateChannel(true)}
+    />
+  );
+
+  const content = currentConversation ? (
+    <ChatContent
+      messages={messages}
+      currentUserId={currentUserId}
+      newMessage={newMessage}
+      onNewMessageChange={setNewMessage}
+      onSendMessage={handleSendMessage}
+    />
+  ) : (
+    <div className="flex-1 flex items-center justify-center text-gray-500">
+      Select a conversation to start chatting
+    </div>
+  );
+
   return (
-    <div className={styles.chatContainer}>
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarHeader}>
-          <div className={styles.buttonGroup}>
-            <button
-              className={styles.toggleButton}
-              onClick={() => setShowNewMessageModal(true)}
-            >
-              + New Message
-            </button>
-            <button
-              className={styles.toggleButton}
-              onClick={() => setShowCreateChannel(true)}
-            >
-              + New Channel
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.sidebarContent}>
-          <div className={styles.sectionHeader}>Channels</div>
-          <div className={styles.sectionList}>
-            {channels.map((channel) => (
-              <div
-                key={channel.id}
-                className={`${styles.sidebarItem} ${
-                  currentConversation === channel.id ? styles.active : ""
-                }`}
-                onClick={() => setCurrentConversation(channel.id)}
-              >
-                # {channel.title}
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.sectionHeader}>Direct Messages</div>
-          <div className={styles.sectionList}>
-            {directMessages.map((conversation) => (
-              <div
-                key={conversation.id}
-                className={`${styles.sidebarItem} ${
-                  currentConversation === conversation.id ? styles.active : ""
-                }`}
-                onClick={() => setCurrentConversation(conversation.id)}
-              >
-                {conversation.conversation_participants
-                  .filter((p) => p.user_id !== currentUserId)
-                  .map((p) => `${p.student.first_name} ${p.student.last_name}`)
-                  .join(", ")}
-              </div>
-            ))}
-          </div>
-        </div>
-      </aside>
-
-      <main className={styles.chatMain}>
-        {currentConversation ? (
-          <>
-            <div className={styles.messagesContainer}>
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`${styles.message} ${
-                    message.sender_id === currentUserId
-                      ? styles.sent
-                      : styles.received
-                  }`}
-                >
-                  {message.sender && (
-                    <div>
-                      <div className={styles.messageSender}>
-                        {message.sender.first_name} {message.sender.last_name}
-                        <span className={styles.messageTime}>
-                          {new Date(message.created_at).toLocaleTimeString()}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                  <div className={styles.messageContent}>{message.content}</div>
-                  {message.reactions && message.reactions.length > 0 && (
-                    <div className={styles.messageReactions}>
-                      {message.reactions.map((reaction) => (
-                        <span key={reaction.id} className={styles.reaction}>
-                          {reaction.reaction}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-            <form onSubmit={handleSendMessage} className={styles.messageForm}>
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
-                className={styles.messageInput}
-              />
-              <button type="submit" className={styles.sendButton}>
-                Send
-              </button>
-            </form>
-          </>
-        ) : (
-          <div className={styles.noChat}>
-            Select a conversation to start chatting
-          </div>
-        )}
-      </main>
+    <>
+      <ChatLayout sidebar={sidebar} content={content} />
 
       {showNewMessageModal && (
         <NewMessageModal
@@ -449,6 +347,6 @@ export default function Chat({ currentUserId }: ChatProps) {
           onCreateSuccess={handleChannelCreated}
         />
       )}
-    </div>
+    </>
   );
 }

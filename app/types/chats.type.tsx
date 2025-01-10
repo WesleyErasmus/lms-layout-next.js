@@ -15,12 +15,10 @@ export type ChannelType = "group" | "course";
 export interface Conversation {
   id: string;
   title: string | null;
-  description?: string | null;
   is_group: boolean;
+  channel_type?: string;
+  description?: string;
   is_public?: boolean;
-  channel_type?: ChannelType;
-  course_id?: string | null;
-  created_by?: string;
   updated_at: string;
   conversation_participants: Participant[];
 }
@@ -30,13 +28,16 @@ export interface Message {
   conversation_id: string;
   sender_id: string;
   content: string;
-  status: string;
   created_at: string;
+  status?: string;
   sender?: {
     first_name: string;
     last_name: string;
   };
-  reactions?: MessageReaction[];
+  reactions?: Array<{
+    id: string;
+    reaction: string;
+  }>;
 }
 
 export interface ChatProps {
