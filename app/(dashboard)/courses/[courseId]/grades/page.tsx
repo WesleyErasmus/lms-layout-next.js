@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase/client";
 import { notFound } from "next/navigation";
-import GradesTable from "./GradesTable";
+import GradesTable from "./components/GradesTable";
 import type { PageParams } from "@/app/types/params.type";
 
 export default async function CourseGradesPage({ params }: PageParams) {

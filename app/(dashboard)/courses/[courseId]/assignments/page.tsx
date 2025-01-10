@@ -1,13 +1,12 @@
-
-"use client"
+"use client";
 import { useState, useEffect, use, Usable } from "react";
 import AssignmentCard from "@/app/(dashboard)/courses/[courseId]/assignments/components/AssignmentCard";
 import CreateAssessmentDialog from "@/app/(dashboard)/courses/[courseId]/assignments/components/CreateAssessmentDialog";
 import Button from "@/app/components/ui/button/Button";
 import Switch from "@/app/components/ui/toggle/Switch";
 import { supabase } from "@/lib/supabase/client";
-import type { Assignment, EditableAssignment } from "@/app/types/course.type";
-import styles from "./page.module.css";
+import type { Assignment } from "@/app/types/course.type";
+import styles from "./styles/page.module.css";
 
 type CourseParams = {
   courseId: string;
@@ -45,24 +44,6 @@ export default function CourseAssignmentsPage({
 
     fetchAssignments();
   }, [courseId]);
-
-  const handleEditChange = (
-    assignmentId: string,
-    field: string,
-    value: string | number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    e.stopPropagation();
-    setEditedAssignments((prev) => {
-      const newMap = new Map(prev);
-      const currentEdits = newMap.get(assignmentId) || {};
-      newMap.set(assignmentId, {
-        ...currentEdits,
-        [field]: value,
-      });
-      return newMap;
-    });
-  };
 
   const saveEdits = async () => {
     setSaving(true);
@@ -109,101 +90,20 @@ export default function CourseAssignmentsPage({
     setAssignments((prev) => [...prev, newAssignment]);
   };
 
-  const renderEditableAssignment = (assignment: Assignment) => {
-    const editedValues = editedAssignments.get(assignment.id) || {};
-    const currentValues = {
-      ...assignment,
-      ...editedValues,
-    };
-
-    return {
-      ...currentValues,
-      title: (
-        <input
-          className={styles.editInput}
-          value={currentValues.title}
-          onChange={(e) => {
-            e.stopPropagation();
-            handleEditChange(assignment.id, "title", e.target.value, e);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      ),
-      description: (
-        <input
-          className={styles.editInput}
-          value={currentValues.description || ""}
-          onChange={(e) => {
-            e.stopPropagation();
-            handleEditChange(assignment.id, "description", e.target.value, e);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      ),
-      brief: (
-        <input
-          className={styles.editInput}
-          value={currentValues.brief || ""}
-          onChange={(e) => {
-            e.stopPropagation();
-            handleEditChange(assignment.id, "brief", e.target.value, e);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      ),
-      marks: (
-        <input
-          className={styles.editInput}
-          type="number"
-          value={currentValues.marks}
-          onChange={(e) => {
-            e.stopPropagation();
-            handleEditChange(assignment.id, "marks", Number(e.target.value), e);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      ),
-      weighting: (
-        <input
-          className={styles.editInput}
-          type="number"
-          value={currentValues.weighting}
-          onChange={(e) => {
-            e.stopPropagation();
-            handleEditChange(
-              assignment.id,
-              "weighting",
-              Number(e.target.value),
-              e
-            );
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      ),
-      due_date: (
-        <input
-          className={styles.editInput}
-          type="date"
-          value={
-            currentValues.due_date
-              ? new Date(currentValues.due_date).toISOString().split("T")[0]
-              : ""
-          }
-          onChange={(e) => {
-            e.stopPropagation();
-            handleEditChange(assignment.id, "due_date", e.target.value, e);
-          }}
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            padding: "8px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-            width: "100%",
-            cursor: "pointer",
-          }}
-        />
-      ),
-    };
+  const handleEditChange = (
+    assignmentId: string,
+    field: string,
+    value: string | number
+  ) => {
+    setEditedAssignments((prev) => {
+      const newMap = new Map(prev);
+      const currentEdits = newMap.get(assignmentId) || {};
+      newMap.set(assignmentId, {
+        ...currentEdits,
+        [field]: value,
+      });
+      return newMap;
+    });
   };
 
   return (
@@ -239,16 +139,10 @@ export default function CourseAssignmentsPage({
       {assignments.map((assignment) => (
         <AssignmentCard
           key={assignment.id}
-          assignment={
-            isEditing
-              ? (renderEditableAssignment(assignment) as EditableAssignment)
-              : {
-                  ...assignment,
-                  dueDate: assignment.due_date
-                    ? new Date(assignment.due_date)
-                    : undefined,
-                }
-          }
+          assignment={assignment}
+          isEditing={isEditing}
+          editedValues={editedAssignments.get(assignment.id)}
+          onEditChange={handleEditChange}
         />
       ))}
 

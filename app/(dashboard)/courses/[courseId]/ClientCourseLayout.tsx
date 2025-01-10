@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from "react";
 import { useCourse } from "@/app/contexts/CourseContext";
-import styles from "./layout.module.css";
 import CourseNavbar from "@/app/(dashboard)/courses/components/CourseNavbar";
 
 export default function ClientCourseLayout({
@@ -21,7 +20,7 @@ export default function ClientCourseLayout({
   }, [course, setCourse, clearCourse]);
 
   return (
-    <div className={styles.container}>
+    <div>
       <CourseNavbar courseId={course.id} />
       {children}
     </div>

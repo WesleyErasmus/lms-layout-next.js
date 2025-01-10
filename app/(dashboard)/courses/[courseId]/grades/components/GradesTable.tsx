@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import Switch from "@/app/components/ui/toggle/Switch";
-import styles from "./GradesTable.module.css";
+import styles from "../styles/GradesTable.module.css";
 import type { Assignment, Enrollment, Grade } from "@/app/types/course.type";
 
 interface GradesTableProps {
