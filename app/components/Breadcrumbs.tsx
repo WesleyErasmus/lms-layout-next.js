@@ -17,7 +17,7 @@ export default function Breadcrumbs() {
     const fetchStudentName = async (studentId: string) => {
       try {
         const { data, error } = await supabase
-          .from("students")
+          .from("users")
           .select("first_name, last_name")
           .eq("id", studentId)
           .single();
@@ -80,7 +80,7 @@ export default function Breadcrumbs() {
         if (courseIndex !== -1) {
           breadcrumbItems.splice(courseIndex + 1, 0, {
             label: courseTitle,
-            path: `/routes/courses/${pathSegments[1]}`,
+            path: `/courses/${pathSegments[1]}`,
           });
         }
       }

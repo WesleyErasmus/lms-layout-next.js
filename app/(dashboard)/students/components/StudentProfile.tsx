@@ -38,7 +38,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
     async function fetchStudentDetails() {
       try {
         const { data, error } = await supabase
-          .from("students")
+          .from("users")
           .select("*")
           .eq("id", studentId)
           .single();
@@ -71,7 +71,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
     setSaving(true);
     try {
       const { error } = await supabase
-        .from("students")
+        .from("users")
         .update(editedStudent)
         .eq("id", student.id);
 

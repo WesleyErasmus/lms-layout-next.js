@@ -5,5 +5,5 @@ export default function CoursePage({
 }: {
   params: { courseId: string };
 }) {
-  redirect(`/routes/courses/${params.courseId}/assignments`);
+  redirect(`/courses/${params.courseId}/assignments`);
 }

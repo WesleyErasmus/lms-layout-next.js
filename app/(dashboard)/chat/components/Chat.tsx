@@ -59,7 +59,7 @@ export default function Chat({ currentUserId }: ChatProps) {
             updated_at,
             conversation_participants (
               user_id,
-              student:students (
+              student:users (
                 id,
                 first_name,
                 last_name,
@@ -93,7 +93,7 @@ export default function Chat({ currentUserId }: ChatProps) {
         setConversations(accessibleConversations);
 
         const { data: studentsData, error: studentsError } = await supabase
-          .from("students")
+          .from("users")
           .select("id, first_name, last_name, email")
           .order("first_name");
 
@@ -118,7 +118,7 @@ export default function Chat({ currentUserId }: ChatProps) {
           .select(
             `
             *,
-            sender:students(first_name, last_name),
+            sender:users(first_name, last_name),
             reactions:message_reactions(*)
           `
           )
@@ -183,7 +183,7 @@ export default function Chat({ currentUserId }: ChatProps) {
         .select(
           `
           *,
-          sender:students(first_name, last_name),
+          sender:users(first_name, last_name),
           reactions:message_reactions(*)
         `
         )
@@ -315,7 +315,7 @@ export default function Chat({ currentUserId }: ChatProps) {
           updated_at,
           conversation_participants (
             user_id,
-            student:students (
+            student:users (
               id,
               first_name,
               last_name,

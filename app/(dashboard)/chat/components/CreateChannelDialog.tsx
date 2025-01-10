@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { Course } from "@/app/types/chats.type";
 import styles from "../styles/CreateChannelDialog.module.css";
@@ -22,7 +22,7 @@ export default function CreateChannelDialog({
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useState(() => {
+  useEffect(() => {
     const fetchCourses = async () => {
       const { data, error } = await supabase.from("courses").select("*");
       if (!error && data) {

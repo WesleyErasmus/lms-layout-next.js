@@ -14,7 +14,7 @@ export default function StudentsPage() {
     async function fetchStudents() {
       try {
         const { data, error } = await supabase
-          .from("students")
+          .from("users")
           .select("*")
           .order("last_name", { ascending: true });
 
@@ -31,7 +31,7 @@ export default function StudentsPage() {
   }, []);
 
   const handleProfileClick = (studentId: string) => {
-    router.push(`/routes/students/${studentId}`);
+    router.push(`/students/${studentId}`);
   };
 
   const tableColumns = [

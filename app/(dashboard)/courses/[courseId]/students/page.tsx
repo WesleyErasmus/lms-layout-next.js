@@ -18,7 +18,7 @@ export default async function CourseStudentsPage({
     .from("enrollments")
     .select(
       `
-      students(id, first_name, last_name, email)
+      users(id, first_name, last_name, email)
     `
     )
     .eq("course_id", courseId)
