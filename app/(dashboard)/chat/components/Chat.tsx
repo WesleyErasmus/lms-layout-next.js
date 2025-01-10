@@ -25,6 +25,22 @@ export default function Chat({ currentUserId }: ChatProps) {
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [showCreateChannel, setShowCreateChannel] = useState(false);
 
+  const createCompleteMessage = (
+    content: string,
+    currentUser: Student | undefined
+  ): Message => {
+    return {
+      id: `temp-${Date.now()}`,
+      conversation_id: currentConversation!,
+      sender_id: currentUserId,
+      content: content,
+      status: "sending",
+      created_at: new Date().toISOString(),
+      sender: currentUser,
+      reactions: [],
+    };
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,23 +50,23 @@ export default function Chat({ currentUserId }: ChatProps) {
           .from("conversations")
           .select(
             `
-          id,
-          title,
-          is_group,
-          channel_type,
-          description,
-          is_public,
-          updated_at,
-          conversation_participants (
-            user_id,
-            student:students (
-              id,
-              first_name,
-              last_name,
-              email
+            id,
+            title,
+            is_group,
+            channel_type,
+            description,
+            is_public,
+            updated_at,
+            conversation_participants (
+              user_id,
+              student:students (
+                id,
+                first_name,
+                last_name,
+                email
+              )
             )
-          )
-        `
+          `
           )
           .order("updated_at", { ascending: false });
 
@@ -123,7 +139,9 @@ export default function Chat({ currentUserId }: ChatProps) {
           filter: `conversation_id=eq.${currentConversation}`,
         },
         (payload) => {
-          setMessages((current) => [...current, payload.new as Message]);
+          if (payload.new.sender_id !== currentUserId) {
+            fetchMessages();
+          }
         }
       )
       .subscribe();
@@ -131,33 +149,47 @@ export default function Chat({ currentUserId }: ChatProps) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [currentConversation]);
+  }, [currentConversation, currentUserId]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentConversation || !newMessage.trim()) return;
 
-    const tempMessage: Message = {
-      id: Date.now().toString(),
-      conversation_id: currentConversation,
-      sender_id: currentUserId,
-      content: newMessage.trim(),
-      status: "sending",
-      created_at: new Date().toISOString(),
-    };
-
-    setMessages((current) => [...current, tempMessage]);
+    const messageContent = newMessage.trim();
     setNewMessage("");
 
-    try {
-      const { error } = await supabase.from("messages").insert({
-        conversation_id: currentConversation,
-        sender_id: currentUserId,
-        content: tempMessage.content,
-        status: "sent",
-      });
+    const currentUser = students.find((s) => s.id === currentUserId);
+    const optimisticMessage = createCompleteMessage(
+      messageContent,
+      currentUser
+    );
+    setMessages((current) => [...current, optimisticMessage]);
 
-      if (error) throw error;
+    try {
+      const { data: insertedMessage, error: insertError } = await supabase
+        .from("messages")
+        .insert({
+          conversation_id: currentConversation,
+          sender_id: currentUserId,
+          content: messageContent,
+          status: "sent",
+        })
+        .select(
+          `
+          *,
+          sender:students(first_name, last_name),
+          reactions:message_reactions(*)
+        `
+        )
+        .single();
+
+      if (insertError) throw insertError;
+
+      setMessages((current) =>
+        current.map((msg) =>
+          msg.id === optimisticMessage.id ? insertedMessage : msg
+        )
+      );
 
       await supabase
         .from("conversations")
@@ -166,7 +198,7 @@ export default function Chat({ currentUserId }: ChatProps) {
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages((current) =>
-        current.filter((msg) => msg.id !== tempMessage.id)
+        current.filter((msg) => msg.id !== optimisticMessage.id)
       );
     }
   };
@@ -177,12 +209,12 @@ export default function Chat({ currentUserId }: ChatProps) {
         .from("conversation_participants")
         .select(
           `
-        conversation_id,
-        conversations!inner (
-          is_group,
-          id
-        )
-      `
+          conversation_id,
+          conversations!inner (
+            is_group,
+            id
+          )
+        `
         )
         .eq("user_id", currentUserId)
         .eq("conversations.is_group", false);
@@ -201,7 +233,7 @@ export default function Chat({ currentUserId }: ChatProps) {
           .in("conversation_id", conversationIds)
           .single();
 
-        if (checkError && checkError.code !== "PGRST116") throw checkError; // PGRST116 means no rows returned
+        if (checkError && checkError.code !== "PGRST116") throw checkError;
 
         if (existingConversation) {
           setCurrentConversation(existingConversation.conversation_id);
@@ -268,23 +300,23 @@ export default function Chat({ currentUserId }: ChatProps) {
         .from("conversations")
         .select(
           `
-        id,
-        title,
-        is_group,
-        channel_type,
-        description,
-        is_public,
-        updated_at,
-        conversation_participants!inner (
-          user_id,
-          student:students!inner (
-            id,
-            first_name,
-            last_name,
-            email
+          id,
+          title,
+          is_group,
+          channel_type,
+          description,
+          is_public,
+          updated_at,
+          conversation_participants!inner (
+            user_id,
+            student:students!inner (
+              id,
+              first_name,
+              last_name,
+              email
+            )
           )
-        )
-      `
+        `
         )
         .order("updated_at", { ascending: false });
 
@@ -324,7 +356,7 @@ export default function Chat({ currentUserId }: ChatProps) {
       onSendMessage={handleSendMessage}
     />
   ) : (
-    <div className="flex-1 flex items-center justify-center text-gray-500">
+    <div>
       Select a conversation to start chatting
     </div>
   );
