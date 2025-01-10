@@ -77,8 +77,14 @@ export default function Chat({ currentUserId }: ChatProps) {
 
         const accessibleConversations =
           typedConversations?.filter((conv) => {
-            if (conv.is_group && conv.is_public) return true;
-
+            if (conv.is_group) {
+              return (
+                conv.is_public ||
+                conv.conversation_participants.some(
+                  (participant) => participant.user_id === currentUserId
+                )
+              );
+            }
             return conv.conversation_participants.some(
               (participant) => participant.user_id === currentUserId
             );
@@ -307,9 +313,9 @@ export default function Chat({ currentUserId }: ChatProps) {
           description,
           is_public,
           updated_at,
-          conversation_participants!inner (
+          conversation_participants (
             user_id,
-            student:students!inner (
+            student:students (
               id,
               first_name,
               last_name,
@@ -324,9 +330,22 @@ export default function Chat({ currentUserId }: ChatProps) {
 
       const typedConversations = data as unknown as Conversation[];
 
-      if (typedConversations) {
-        setConversations(typedConversations);
-      }
+      const accessibleConversations =
+        typedConversations?.filter((conv) => {
+          if (conv.is_group) {
+            return (
+              conv.is_public ||
+              conv.conversation_participants.some(
+                (participant) => participant.user_id === currentUserId
+              )
+            );
+          }
+          return conv.conversation_participants.some(
+            (participant) => participant.user_id === currentUserId
+          );
+        }) || [];
+
+      setConversations(accessibleConversations);
     } catch (error) {
       console.error("Error refreshing conversations:", error);
     }
@@ -356,9 +375,7 @@ export default function Chat({ currentUserId }: ChatProps) {
       onSendMessage={handleSendMessage}
     />
   ) : (
-    <div>
-      Select a conversation to start chatting
-    </div>
+    <div>Select a conversation to start chatting</div>
   );
 
   return (

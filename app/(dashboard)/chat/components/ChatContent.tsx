@@ -1,8 +1,7 @@
-"use client";
-
 import { useRef } from "react";
 import styles from "../styles/ChatContent.module.css";
 import { Message } from "../../../types/chats.type";
+import Avatar from "@/app/components/Avatar";
 
 interface ChatContentProps {
   messages: Message[];
@@ -33,26 +32,37 @@ export default function ChatContent({
                 : styles.received
             }`}
           >
-            {message.sender && (
-              <div className={styles.messageHeader}>
-                <span className={styles.sender}>
-                  {message.sender.first_name} {message.sender.last_name}
-                </span>
-                <span className={styles.time}>
-                  {new Date(message.created_at).toLocaleTimeString()}
-                </span>
+            <div className={styles.messageContainer}>
+              <Avatar
+                firstName={message.sender?.first_name}
+                lastName={message.sender?.last_name}
+                // profileImageUrl={message.sender?.profile_image_url}
+                size="medium"
+                className={styles.messageAvatar}
+              />
+              <div className={styles.messageContent}>
+                {message.sender && (
+                  <div className={styles.messageHeader}>
+                    <span className={styles.sender}>
+                      {message.sender.first_name} {message.sender.last_name}
+                    </span>
+                    <span className={styles.time}>
+                      {new Date(message.created_at).toLocaleTimeString()}
+                    </span>
+                  </div>
+                )}
+                <div className={styles.content}>{message.content}</div>
+                {message.reactions && message.reactions.length > 0 && (
+                  <div className={styles.reactions}>
+                    {message.reactions.map((reaction) => (
+                      <span key={reaction.id} className={styles.reaction}>
+                        {reaction.reaction}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-            <div className={styles.content}>{message.content}</div>
-            {message.reactions && message.reactions.length > 0 && (
-              <div className={styles.reactions}>
-                {message.reactions.map((reaction) => (
-                  <span key={reaction.id} className={styles.reaction}>
-                    {reaction.reaction}
-                  </span>
-                ))}
-              </div>
-            )}
+            </div>
           </div>
         ))}
         <div ref={messagesEndRef} />

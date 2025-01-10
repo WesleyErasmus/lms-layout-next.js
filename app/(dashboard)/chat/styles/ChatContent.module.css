@@ -113,3 +113,18 @@
   color: #616061;
   cursor: not-allowed;
 }
+
+.messageContainer {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.messageContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.messageAvatar {
+  margin-top: 4px;
+}

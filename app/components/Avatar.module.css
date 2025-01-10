@@ -1,0 +1,45 @@
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.small {
+  width: 28px;
+  height: 28px;
+}
+
+.medium {
+  width: 36px;
+  height: 36px;
+}
+
+.large {
+  width: 48px;
+  height: 48px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.initials {
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  user-select: none;
+}
+
+.small .initials {
+  font-size: 12px;
+}
+
+.large .initials {
+  font-size: 16px;
+}

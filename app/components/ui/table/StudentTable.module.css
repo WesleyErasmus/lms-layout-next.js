@@ -11,8 +11,6 @@
 .tableContainer {
   background: white;
   overflow: hidden;
-    /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06); */
 }
 
 .table {
@@ -50,21 +48,6 @@
 
 .table tbody tr:hover {
   background-color: #f8fafc;
-}
-
-.avatar {
-  background-color: #6366f1;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 16px;
-  text-transform: uppercase;
-  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
 }
 
 .fullName {
@@ -132,11 +115,5 @@
   .tableCell {
     padding: 12px;
     font-size: 13px;
-  }
-
-  .avatar {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
   }
 }

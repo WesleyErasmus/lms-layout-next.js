@@ -29,6 +29,7 @@ export interface Student {
   first_name: string;
   last_name: string;
   email: string;
+  profile_image_url?: string | null;
 }
 
 export interface Enrollment {

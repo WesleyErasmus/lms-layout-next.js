@@ -1,10 +1,13 @@
+import Avatar from "../../Avatar";
 import styles from "./StudentTable.module.css";
+
 
 interface Student {
   id: string;
   first_name: string;
   last_name: string;
   email: string;
+  profile_image_url?: string | null;
 }
 
 interface TableColumn {
@@ -34,8 +37,15 @@ export default function StudentTable({
   const renderCell = (column: TableColumn, student: Student) => {
     switch (column.key) {
       case "avatar":
-        const initials = `${student.first_name[0]}${student.last_name[0]}`;
-        return <div className={styles.avatar}>{initials}</div>;
+        return (
+          <Avatar
+            firstName={student.first_name}
+            lastName={student.last_name}
+            profileImageUrl={student.profile_image_url}
+            size="small"
+            className={styles.tableAvatar}
+          />
+        );
       case "name":
         return (
           <span className={styles.fullName}>
