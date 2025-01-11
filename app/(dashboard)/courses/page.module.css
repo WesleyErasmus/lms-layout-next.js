@@ -1,0 +1,45 @@
+.container {
+  width: 100%;
+  max-width: 1400px;
+  /* margin: 0 auto; */
+  padding: var(--spacing-xl);
+}
+
+.header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.title {
+  color: var(--text);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.gridLayout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
+  width: 100%;
+}
+
+.courseLink {
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  .gridLayout {
+    grid-template-columns: 1fr;
+  }
+}

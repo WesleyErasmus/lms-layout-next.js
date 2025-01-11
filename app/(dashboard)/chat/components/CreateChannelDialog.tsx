@@ -52,7 +52,7 @@ export default function CreateChannelDialog({
           is_public: isPublic,
           channel_type: channelType,
           course_id: channelType === "course" ? selectedCourse : null,
-          created_by: "13c8bf93-01da-4809-a0be-e9735adcf9da",
+          created_by: "0481b2b9-7144-4beb-b4fb-bfbec3424921",
           is_group: true,
         })
         .select()
@@ -190,7 +190,7 @@ export default function CreateChannelDialog({
             <button type="button" onClick={onClose} disabled={loading}>
               Cancel
             </button>
-            <button type="submit" disabled={loading}>
+            <button className={styles.createChannelButton} type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create Channel"}
             </button>
           </div>

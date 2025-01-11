@@ -1,122 +1,30 @@
+/* ChatContent.module.css */
 .messages {
   flex: 1;
-  padding: 1rem;
+  padding: var(--spacing-md);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   min-height: 0;
-  background-color: white;
+  background-color: var(--background);
 }
 
 .message {
   max-width: 100%;
-  padding: 0.5rem 1rem;
+  padding: var(--spacing-sm) var(--spacing-md);
   display: flex;
   flex-direction: column;
-  border-top: 1px lightgray solid;
+  border-top: 1px solid var(--border);
 }
 
 .message:hover {
-  background-color: #F8F8F8;
-}
-
-.messageHeader {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-
-.sender {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: #1D1C1D;
-}
-
-.time {
-  font-size: 0.70rem;
-  font-weight: 500;
-  color: #525252;
-}
-
-.content {
-  font-size: 0.9375rem;
-  word-wrap: break-word;
-  line-height: 1.4;
-  color: #1D1C1D;
-}
-
-.reactions {
-  display: flex;
-  gap: 0.25rem;
-  margin-top: 0.5rem;
-}
-
-.reaction {
-  padding: 0.125rem 0.5rem;
-  background-color: #F8F8F8;
-  border: 1px solid #E8E8E8;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  color: #1D1C1D;
-  cursor: pointer;
-}
-
-.reaction:hover {
-  background-color: #E8E8E8;
-}
-
-.form {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: white;
-  border-top: 1px solid #E8E8E8;
-}
-
-.input {
-  flex: 1;
-  min-height: 2.5rem;
-  max-height: 7.5rem;
-  padding: 0.75rem;
-  border: 1px solid #BBBCBF;
-  border-radius: 0.375rem;
-  font-size: 0.9375rem;
-  resize: none;
-  overflow-y: auto;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #1164A3;
-  box-shadow: 0 0 0 1px #1164A3;
-}
-
-.button {
-  padding: 0.75rem 1rem;
-  background-color: #87CEFA;
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.button:hover {
-  background-color: orange;
-}
-
-.button:disabled {
-  background-color: #E8E8E8;
-  color: #616061;
-  cursor: not-allowed;
+  background-color: var(--surface-hover);
 }
 
 .messageContainer {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-sm);
   align-items: flex-start;
 }
 
@@ -125,6 +33,106 @@
   min-width: 0;
 }
 
+.messageHeader {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.sender {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.time {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.content {
+  font-size: 0.9375rem;
+  word-wrap: break-word;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.reactions {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.reaction {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 0.75rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.reaction:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--primary);
+}
+
+.form {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.input {
+  flex: 1;
+  min-height: 2.5rem;
+  max-height: 7.5rem;
+  padding: var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  resize: none;
+  overflow-y: auto;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.input::placeholder {
+  color: var(--text-secondary);
+}
+
+.button {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: var(--primary-hover);
+}
+
+.button:disabled {
+  background-color: var(--surface);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
 .messageAvatar {
-  margin-top: 4px;
+  margin-top: var(--spacing-xs);
 }

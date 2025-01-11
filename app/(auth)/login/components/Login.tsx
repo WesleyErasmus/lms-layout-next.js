@@ -4,6 +4,7 @@ import { createAuthClient } from "@/lib/supabase/auth-client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../styles/Login.module.css";
+import Button from "@/app/components/ui/button/Button";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -20,7 +21,6 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // const { data, error } = await supabase.auth.signInWithPassword({
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -43,7 +43,7 @@ export default function Login() {
   };
 
   return (
-    <div className={styles.loginContainer}>
+    <div className={styles.pageContainer}>
       <div className={styles.loginContainer}>
         <h1>Login to LMS</h1>
         {error && <div className={styles.errorMessage}>{error}</div>}
@@ -68,9 +68,14 @@ export default function Login() {
               required
             />
           </div>
-          <button className={styles.button} type="submit" disabled={loading}>
+          <Button
+            type="submit"
+            variant="primary"
+            loading={loading}
+            className={styles.button}
+          >
             {loading ? "Logging in..." : "Login"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

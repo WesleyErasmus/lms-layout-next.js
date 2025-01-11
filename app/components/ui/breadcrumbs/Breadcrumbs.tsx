@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useNavigation } from "../contexts/NavigationContext";
-import { useCourse } from "../contexts/CourseContext";
+import { useNavigation } from "../../../contexts/NavigationContext";
+import { useCourse } from "../../../contexts/CourseContext";
 import { supabase } from "@/lib/supabase/client";
 import styles from "./Breadcrumbs.module.css";
 

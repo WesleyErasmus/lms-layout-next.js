@@ -1,5 +1,5 @@
 import Chat from "@/app/(dashboard)/chat/components/Chat";
 
 export default function ChatPage() {
-  return <Chat currentUserId="27b32cd2-b9b6-42ef-9910-8b539dcc3ad3" />;
+  return <Chat currentUserId="0481b2b9-7144-4beb-b4fb-bfbec3424921" />;
 }

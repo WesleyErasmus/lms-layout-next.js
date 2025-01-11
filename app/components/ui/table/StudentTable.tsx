@@ -1,4 +1,4 @@
-import Avatar from "../../Avatar";
+import Avatar from "../avatar/Avatar";
 import styles from "./StudentTable.module.css";
 
 interface Student {

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import styles from "../styles/ChatContent.module.css";
 import { Message } from "../../../types/chats.type";
-import Avatar from "@/app/components/Avatar";
+import Avatar from "@/app/components/ui/avatar/Avatar";
 
 interface ChatContentProps {
   messages: Message[];

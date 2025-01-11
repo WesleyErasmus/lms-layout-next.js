@@ -28,7 +28,6 @@
 
 .imagePlaceholder {
   height: 100%;
-  /* background-color: var(--primary); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,32 +38,38 @@
 .cardBody {
   padding: var(--spacing-md);
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .cardTitle {
   color: var(--text);
   font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: var(--spacing-sm);
+}
+
+.category {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
 }
 
 .cardDescription {
   color: var(--text-secondary);
   font-size: 0.875rem;
   line-height: 1.5;
+  margin-top: auto;
 }
 
 .cardFooter {
   padding: var(--spacing-md);
   border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
-.category {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
+.buttonGroup {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-sm);
 }
 
 .cardButton {
@@ -76,6 +81,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  width: 100%;
 }
 
 .cardButton:hover {

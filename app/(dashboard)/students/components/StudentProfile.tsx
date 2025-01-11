@@ -6,7 +6,7 @@ import styles from "../styles/StudentProfile.module.css";
 import StudentCourses from "./StudentCourses";
 import Switch from "@/app/components/ui/toggle/Switch";
 import Button from "@/app/components/ui/button/Button";
-import Avatar from "@/app/components/Avatar";
+import Avatar from "@/app/components/ui/avatar/Avatar";
 
 export interface StudentProfileProps {
   studentId: string;
