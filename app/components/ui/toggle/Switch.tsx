@@ -1,34 +1,66 @@
 import React from "react";
 import styles from "./Switch.module.css";
 
-interface SliderProps {
+interface SwitchProps {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   disabled?: boolean;
+  size?: "sm" | "md" | "lg";
+  label?: string;
+  name?: string;
 }
 
-const Slider = ({
+const Switch = ({
   checked,
   onCheckedChange,
   disabled = false,
-}: SliderProps) => {
+  size = "md",
+  label,
+  name,
+}: SwitchProps) => {
+  const id = React.useId();
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (!disabled) {
+        onCheckedChange(!checked);
+      }
+    }
+  };
+
   return (
-    <button
-      role="switch"
-      aria-checked={checked}
-      onClick={() => !disabled && onCheckedChange(!checked)}
-      className={`
-        ${styles.slider}
-        ${disabled ? styles.disabled : ""}
-        ${checked ? styles.checked : ""}
-      `}
-      disabled={disabled}
-    >
-      <span
-        className={`${styles.thumb} ${checked ? styles.thumbChecked : ""}`}
-      />
-    </button>
+    <div className={styles.switchContainer}>
+      {label && (
+        <label htmlFor={id} className={styles.label}>
+          {label}
+        </label>
+      )}
+      <button
+        id={id}
+        role="switch"
+        aria-checked={checked}
+        aria-label={label}
+        name={name}
+        onClick={() => !disabled && onCheckedChange(!checked)}
+        onKeyDown={handleKeyDown}
+        className={`
+          ${styles.switch}
+          ${styles[size]}
+          ${disabled ? styles.disabled : ""}
+          ${checked ? styles.checked : ""}
+        `}
+        disabled={disabled}
+        tabIndex={disabled ? -1 : 0}
+      >
+        <span className={styles.track} />
+        <span
+          className={`${styles.thumb} ${checked ? styles.thumbChecked : ""}`}
+        />
+        <span className={styles.focusRing} />
+      </button>
+    </div>
   );
 };
 
-export default Slider;
+export default Switch;

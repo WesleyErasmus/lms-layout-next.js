@@ -111,25 +111,23 @@ export default function CourseAssignmentsPage({
       <div className={styles.header}>
         <h1>Assignments</h1>
         <div className={styles.controls}>
-          <div className={styles.switchContainer}>
-            <span>Edit Mode</span>
-            <Switch
-              checked={isEditing}
-              onCheckedChange={(checked) => {
-                if (!checked && editedAssignments.size > 0) {
-                  const confirmSave = window.confirm(
-                    "Would you like to save your changes?"
-                  );
-                  if (confirmSave) {
-                    saveEdits();
-                  } else {
-                    setEditedAssignments(new Map());
-                  }
+          <Switch
+            checked={isEditing}
+            onCheckedChange={(checked) => {
+              if (!checked && editedAssignments.size > 0) {
+                const confirmSave = window.confirm(
+                  "Would you like to save your changes?"
+                );
+                if (confirmSave) {
+                  saveEdits();
+                } else {
+                  setEditedAssignments(new Map());
                 }
-                setIsEditing(checked);
-              }}
-            />
-          </div>
+              }
+              setIsEditing(checked);
+            }}
+            label="Edit Mode"
+          />
           <Button onClick={() => setIsDialogOpen(true)}>
             Create Assignment
           </Button>

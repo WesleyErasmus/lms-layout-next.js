@@ -1,67 +1,94 @@
 .container {
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .headerTitle {
-}
-
-.switchContainer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  font-size: 2rem;
+  color: var(--text);
+  margin: 0;
+  font-weight: 500;
 }
 
 .tableContainer {
   overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 .table {
   min-width: 100%;
   border-collapse: collapse;
-  border: 1px solid #d1d5db;
+  background-color: var(--surface);
 }
 
 .tableHead {
-  background-color: #fccd5b;
+  background-color: var(--surface-hover);
 }
 
 .tableHeaderCell {
-  padding: 0.5rem 1rem;
-  border: 1px solid #d1d5db;
+  padding: var(--spacing-md);
+  border-bottom: 2px solid var(--border);
   text-align: left;
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .tableBodyCell {
-  padding: 0.5rem 1rem;
-  border: 1px solid #d1d5db;
+  padding: var(--spacing-md);
+  border: 1px solid var(--border);
   text-align: center;
+  color: var(--text);
 }
 
 .studentCell {
   text-align: left;
+  background-color: var(--surface);
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  border-right: 2px solid var(--border);
 }
 
 .studentInfo {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .input {
   width: 5rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.25rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   text-align: center;
+  background-color: var(--background);
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-hover);
 }
 
 .finalGrade {
-  font-weight: 700;
+  font-weight: 600;
+  background-color: var(--surface-hover);
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  border-left: 1px solid var(--border);
 }
 
 .savingOverlay {
@@ -71,42 +98,59 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 50;
 }
 
 .savingMessage {
-  background-color: #ffffff;
-  padding: 1rem;
-  border-radius: 0.5rem;
+  background-color: var(--surface);
+  color: var(--text);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .invalidInput {
-  background-color: #fee2e2;
+  background-color: rgb(254, 226, 226);
+  border-color: rgb(239, 68, 68);
 }
 
 .validationMessage {
-  color: #ef4444;
+  color: rgb(239, 68, 68);
   white-space: nowrap;
+  font-size: 0.75rem;
+  margin-top: var(--spacing-xs);
+}
+
+.gradeInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
 .currentGrade {
   font-weight: 600;
   font-size: 1.1rem;
+  color: var(--primary);
 }
 
 .gradeContext {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: var(--spacing-xs);
 }
 
 .gradeNote {
   font-size: 0.75rem;
-  color: #666;
-  display: block;
+  color: var(--text-secondary);
+}
+
+.accumulatedGrade {
+  font-size: 0.875rem;
+  color: var(--text);
 }
 
 .maxGrade {
-  font-size: 0.8rem;
-  color: #2563eb;
+  font-size: 0.875rem;
+  color: var(--primary);
   font-weight: 500;
 }

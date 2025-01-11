@@ -23,48 +23,44 @@ export default function AssignmentCard({
     ...editedValues,
   };
 
+  const handleInputChange = (field: string, value: string | number) => {
+    onEditChange(assignment.id, field, value);
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   if (isEditing) {
     return (
-      <div className={styles.card}>
+      <div className={styles.card} onClick={handleClick}>
         <h3 className={styles.cardTitle}>
           <input
-            className={styles.editInput}
+            className={styles.input}
             value={currentValues.title}
-            onChange={(e) => {
-              e.stopPropagation();
-              onEditChange(assignment.id, "title", e.target.value);
-            }}
-            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => handleInputChange("title", e.target.value)}
           />
         </h3>
         <div className={styles.cardContent}>
           <div className={styles.brief}>
             <strong>Brief:</strong>{" "}
             <input
-              className={styles.editInput}
+              className={styles.input}
               value={currentValues.brief || ""}
-              onChange={(e) => {
-                e.stopPropagation();
-                onEditChange(assignment.id, "brief", e.target.value);
-              }}
-              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => handleInputChange("brief", e.target.value)}
             />
           </div>
           <div className={styles.description}>
-            <input
-              className={styles.editInput}
+            <textarea
+              className={`${styles.input} ${styles.textarea}`}
               value={currentValues.description || ""}
-              onChange={(e) => {
-                e.stopPropagation();
-                onEditChange(assignment.id, "description", e.target.value);
-              }}
-              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => handleInputChange("description", e.target.value)}
             />
           </div>
           <div className={styles.metadata}>
-            <div className={styles.dueDate}>
+            <div className={`${styles.metadataItem} ${styles.dueDate}`}>
               <input
-                className={styles.editInput}
+                className={styles.input}
                 type="date"
                 value={
                   currentValues.due_date
@@ -73,48 +69,27 @@ export default function AssignmentCard({
                         .split("T")[0]
                     : ""
                 }
-                onChange={(e) => {
-                  e.stopPropagation();
-                  onEditChange(assignment.id, "due_date", e.target.value);
-                }}
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  padding: "8px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                  width: "100%",
-                  cursor: "pointer",
-                }}
+                onChange={(e) => handleInputChange("due_date", e.target.value)}
               />
             </div>
-            <div className={styles.marks}>
-              Total Marks:{" "}
+            <div className={`${styles.metadataItem} ${styles.marks}`}>
               <input
-                className={styles.editInput}
+                className={styles.input}
                 type="number"
                 value={currentValues.marks}
-                onChange={(e) => {
-                  e.stopPropagation();
-                  onEditChange(assignment.id, "marks", Number(e.target.value));
-                }}
-                onClick={(e) => e.stopPropagation()}
+                onChange={(e) =>
+                  handleInputChange("marks", Number(e.target.value))
+                }
               />
             </div>
-            <div className={styles.weight}>
-              Assignment Weight:{" "}
+            <div className={`${styles.metadataItem} ${styles.weight}`}>
               <input
-                className={styles.editInput}
+                className={styles.input}
                 type="number"
                 value={currentValues.weighting}
-                onChange={(e) => {
-                  e.stopPropagation();
-                  onEditChange(
-                    assignment.id,
-                    "weighting",
-                    Number(e.target.value)
-                  );
-                }}
-                onClick={(e) => e.stopPropagation()}
+                onChange={(e) =>
+                  handleInputChange("weighting", Number(e.target.value))
+                }
               />
             </div>
           </div>
@@ -133,12 +108,14 @@ export default function AssignmentCard({
         <div className={styles.description}>{currentValues.description}</div>
         <div className={styles.metadata}>
           {currentValues.due_date && (
-            <div className={styles.dueDate}>
+            <div className={`${styles.metadataItem} ${styles.dueDate}`}>
               Due: {new Date(currentValues.due_date).toLocaleDateString()}
             </div>
           )}
-          <div className={styles.marks}>Total Marks: {currentValues.marks}</div>
-          <div className={styles.weight}>
+          <div className={`${styles.metadataItem} ${styles.marks}`}>
+            Total Marks: {currentValues.marks}
+          </div>
+          <div className={`${styles.metadataItem} ${styles.weight}`}>
             Assignment Weight: {currentValues.weighting}%
           </div>
         </div>
@@ -146,65 +123,3 @@ export default function AssignmentCard({
     </div>
   );
 }
-
-// import {
-//   type Assignment,
-//   type EditableAssignment,
-// } from "@/app/types/course.type";
-// import styles from "../styles/AssignmentCard.module.css";
-
-// interface AssignmentCardProps {
-//   assignment: Assignment | EditableAssignment;
-// }
-
-// export default function AssignmentCard({
-//   assignment,
-// }: AssignmentCardProps) {
-//   const isEditableAssignment = (
-//     assignment: Assignment | EditableAssignment
-//   ): assignment is EditableAssignment => {
-//     return (assignment as EditableAssignment).title instanceof Object;
-//   };
-
-//   return (
-//     <div className={styles.card}>
-//       <h3 className={styles.cardTitle}>
-//         {isEditableAssignment(assignment) ? assignment.title : assignment.title}
-//       </h3>
-//       <div className={styles.cardContent}>
-//         <div className={styles.brief}>
-//           <strong>Brief:</strong>{" "}
-//           {isEditableAssignment(assignment)
-//             ? assignment.brief
-//             : assignment.brief}
-//         </div>
-//         <div className={styles.description}>
-//           {isEditableAssignment(assignment)
-//             ? assignment.description
-//             : assignment.description}
-//         </div>
-//         <div className={styles.metadata}>
-//           {assignment.due_date && (
-//             <div className={styles.dueDate}>
-//               {isEditableAssignment(assignment)
-//                 ? assignment.due_date
-//                 : `Due: ${new Date(assignment.due_date).toLocaleDateString()}`}
-//             </div>
-//           )}
-//           <div className={styles.marks}>
-//             Total Marks:{" "}
-//             {isEditableAssignment(assignment)
-//               ? assignment.marks
-//               : assignment.marks}
-//           </div>
-//           <div className={styles.weight}>
-//             Assignment Weight:{" "}
-//             {isEditableAssignment(assignment)
-//               ? assignment.weighting
-//               : `${assignment.weighting}%`}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }

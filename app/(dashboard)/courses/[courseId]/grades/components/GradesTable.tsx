@@ -243,30 +243,28 @@ export default function GradesTable({
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.headerTitle}>Grades</h1>
-        <div className={styles.switchContainer}>
-          <div>Capture Mode</div>
-          <Switch
-            checked={isEditing}
-            onCheckedChange={(checked) => {
-              if (!checked && editedGrades.size > 0) {
-                if (invalidGrades.size > 0) {
-                  alert("Please correct invalid grades before saving.");
-                  return;
-                }
-                const confirmSave = window.confirm(
-                  "Would you like to save your changes?"
-                );
-                if (confirmSave) {
-                  saveGrades();
-                } else {
-                  setEditedGrades(new Map());
-                  setInvalidGrades(new Map());
-                }
+        <Switch
+          checked={isEditing}
+          onCheckedChange={(checked) => {
+            if (!checked && editedGrades.size > 0) {
+              if (invalidGrades.size > 0) {
+                alert("Please correct invalid grades before saving.");
+                return;
               }
-              setIsEditing(checked);
-            }}
-          />
-        </div>
+              const confirmSave = window.confirm(
+                "Would you like to save your changes?"
+              );
+              if (confirmSave) {
+                saveGrades();
+              } else {
+                setEditedGrades(new Map());
+                setInvalidGrades(new Map());
+              }
+            }
+            setIsEditing(checked);
+          }}
+          label="Capture Mode"
+        />
       </div>
 
       <div className={styles.tableContainer}>

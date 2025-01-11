@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
-import styles from "./StudentCourses.module.css";
+import styles from "../styles/StudentCourses.module.css";
 
 interface StudentCourseProps {
   studentId: string;
@@ -54,7 +54,7 @@ export default function StudentCourses({ studentId }: StudentCourseProps) {
             )
           `
           )
-          .eq("student_id", studentId);
+          .eq("user_id", studentId);
 
         if (enrollmentError) throw enrollmentError;
 

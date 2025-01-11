@@ -15,7 +15,7 @@ export default async function CourseGradesPage({ params }: PageParams) {
         .select(
           `
         *,
-        users (
+        students: users (
           id,
           first_name,
           last_name,

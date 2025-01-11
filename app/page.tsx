@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { supabase } from "@/lib/supabase/client";
+import CourseCard from "./components/ui/card/CourseCard";
+
 
 export default async function Home() {
   const { data: courses, error } = await supabase.from("courses").select("*");
@@ -10,25 +12,29 @@ export default async function Home() {
     console.error("Error fetching courses:", error);
     return <div>Error loading courses</div>;
   }
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Courses</h1>
+      <div className={styles.header}>
+        <h1 className={styles.title}>My Courses</h1>
+        <p className={styles.subtitle}>
+          Access your enrolled courses and assignments
+        </p>
+      </div>
+
       <div className={styles.gridLayout}>
         {courses.map((course) => (
           <Link
-            className={styles.courseLink}
             key={course.id}
             href={`/courses/${course.id}/assignments`}
+            className={styles.courseLink}
           >
-            <div className={styles.courseCard}>
-              <div className={styles.imagePlaceholder}>
-                <h2 className={styles.courseTitle}>{course.title}</h2>
-              </div>
-              <div className={styles.cardContent}>
-                <p className={styles.courseId}>Course ID: {course.id}</p>
-                <p className={styles.courseDescription}>{course.description}</p>
-              </div>
-            </div>
+            <CourseCard
+              title={course.title}
+              description={course.description}
+              category={`Course ID: ${course.id}`}
+              href={`/courses/${course.id}/assignments`}
+            />
           </Link>
         ))}
       </div>

@@ -25,7 +25,7 @@ export default function CourseStudentsClient({
       columns={tableColumns}
       students={students}
       onProfileClick={(studentId) => {
-        router.push(`/routes/students/${studentId}`);
+        router.push(`/students/${studentId}`);
       }}
     />
   );

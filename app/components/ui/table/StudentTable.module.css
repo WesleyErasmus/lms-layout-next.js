@@ -1,70 +1,74 @@
-/* .container {
-} */
+.container {
+  padding: var(--spacing-md);
+}
 
 .title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #111827;
-  padding-bottom: 12px;
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: var(--spacing-lg);
 }
 
 .tableContainer {
-  background: white;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .tableHeader {
-  background-color: #f8fafc;
-  padding: 16px;
+  background-color: var(--surface-hover);
+  padding: var(--spacing-md);
   text-align: left;
-  font-weight: 600;
-  color: #475569;
-  border-bottom: 1px solid #e2e8f0;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
 }
 
 .tableCell {
-  padding: 16px;
-  border-bottom: 1px solid #e2e8f0;
-  color: #475569;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
 }
 
 .table tr:last-child td {
   border-bottom: none;
 }
 
-/* .table tbody tr {
-  transition: all 0.2s ease-in-out;
-} */
+.table tbody tr {
+  transition: background-color 0.2s ease-in-out;
+}
 
 .table tbody tr:hover {
-  background-color: #f8fafc;
+  background-color: var(--surface-hover);
 }
 
 .fullName {
   font-weight: 500;
-  color: #1f2937;
+  color: var(--text);
 }
 
 .email {
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .profileButton {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
   transition: all 0.2s ease-in-out;
   display: flex;
   align-items: center;
@@ -72,48 +76,49 @@
 }
 
 .profileButton:hover {
-  background-color: #f1f5f9;
+  background-color: var(--surface-hover);
 }
 
 .profileButton:focus {
-  outline: 2px solid #6366f1;
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
 .profileIcon {
   width: 20px;
   height: 20px;
-  color: #6b7280;
+  color: var(--text-secondary);
   transition: color 0.2s ease-in-out;
 }
 
 .profileButton:hover .profileIcon {
-  color: #4f46e5;
+  color: var(--primary);
 }
 
 .loading {
-  padding: 40px;
+  padding: var(--spacing-xl);
   text-align: center;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
 }
 
 @media (max-width: 640px) {
   .container {
-    padding: 16px;
+    padding: var(--spacing-sm);
   }
 
   .tableContainer {
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     overflow-x: auto;
   }
 
   .tableHeader,
   .tableCell {
-    padding: 12px;
-    font-size: 13px;
+    padding: var(--spacing-sm);
+    font-size: 0.8125rem;
   }
 }

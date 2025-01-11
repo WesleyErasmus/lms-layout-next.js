@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import styles from "./StudentProfile.module.css";
-import StudentCourses from "../../../components/StudentCourses";
+import styles from "../styles/StudentProfile.module.css";
+import StudentCourses from "./StudentCourses";
 import Switch from "@/app/components/ui/toggle/Switch";
 import Button from "@/app/components/ui/button/Button";
+import Avatar from "@/app/components/Avatar";
 
 export interface StudentProfileProps {
   studentId: string;
@@ -136,39 +137,36 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
       <div className={styles.header}>
         <div className={styles.profileHeader}>
           <div className={styles.avatarContainer}>
-            <div className={styles.avatar}>
-              {student.first_name[0]}
-              {student.last_name[0]}
-            </div>
+            <Avatar
+              firstName={editedStudent.first_name || student.first_name}
+              lastName={editedStudent.last_name || student.last_name}
+              size="large"
+              className={styles.avatar}
+            />
           </div>
           <h1 className={styles.studentName}>
-            {/* {editedStudent.title || student.title
-              ? `${editedStudent.title || student.title} `
-              : ""} */}
             {editedStudent.first_name || student.first_name}{" "}
             {editedStudent.last_name || student.last_name}
           </h1>
         </div>
         <div className={styles.controls}>
-          <div className={styles.switchContainer}>
-            <span>Edit Mode</span>
-            <Switch
-              checked={isEditing}
-              onCheckedChange={(checked) => {
-                if (!checked && Object.keys(editedStudent).length > 0) {
-                  const confirmSave = window.confirm(
-                    "Would you like to save your changes?"
-                  );
-                  if (confirmSave) {
-                    saveChanges();
-                  } else {
-                    setEditedStudent({});
-                  }
+          <Switch
+            checked={isEditing}
+            onCheckedChange={(checked) => {
+              if (!checked && Object.keys(editedStudent).length > 0) {
+                const confirmSave = window.confirm(
+                  "Would you like to save your changes?"
+                );
+                if (confirmSave) {
+                  saveChanges();
+                } else {
+                  setEditedStudent({});
                 }
-                setIsEditing(checked);
-              }}
-            />
-          </div>
+              }
+              setIsEditing(checked);
+            }}
+            label="Edit Mode"
+          />
           {isEditing && Object.keys(editedStudent).length > 0 && (
             <Button onClick={saveChanges}>Save Changes</Button>
           )}

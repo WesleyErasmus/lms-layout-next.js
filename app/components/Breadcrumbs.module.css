@@ -1,5 +1,5 @@
 .breadcrumbs {
-  padding: 0.5rem 0;
+  padding: var(--spacing-sm) 0;
 }
 
 .breadcrumbs ol {
@@ -9,31 +9,38 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .breadcrumbs li {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .breadcrumbs a {
-  color: #666;
+  color: var(--text-secondary);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
 }
 
 .breadcrumbs a:hover {
-  color: #000;
-  text-decoration: underline;
+  color: var(--text);
+  background-color: var(--surface-hover);
 }
 
 .separator {
-  color: #666;
+  color: var(--text-secondary);
+  user-select: none;
 }
 
 .breadcrumbs span[aria-current="page"] {
-  color: #000;
+  color: var(--text);
   font-weight: 500;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
 }

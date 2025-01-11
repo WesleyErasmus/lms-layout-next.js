@@ -25,14 +25,14 @@ export default function Avatar({
   const getRandomColor = useMemo(() => {
     const name = firstName + lastName;
     const colors = [
-      "#FF6B6B", 
-      "#4ECDC4", 
-      "#45B7D1", 
-      "#96CEB4", 
-      "#D4A5A5", 
-      "#9B59B6", 
-      "#E67E22", 
-      "#1ABC9C", 
+      "#FF6B6B",
+      "#4ECDC4",
+      "#45B7D1",
+      "#96CEB4",
+      "#D4A5A5",
+      "#9B59B6",
+      "#E67E22",
+      "#1ABC9C",
     ];
     const index = name
       .split("")

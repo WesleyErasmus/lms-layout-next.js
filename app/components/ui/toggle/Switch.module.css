@@ -1,39 +1,135 @@
-.slider {
+.switchContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.label {
+  font-size: 0.875rem;
+  color: var(--text);
+  user-select: none;
+}
+
+.switch {
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: 24px;
-  width: 44px; 
-  border-radius: 9999px;
-  transition: background-color 200ms ease-in-out;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
   cursor: pointer;
-  background-color: #e5e7eb;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.slider:focus {
-  outline: none;
+/* Base sizes */
+.switch.sm {
+  width: 36px;
+  height: 20px;
 }
 
-.slider.checked {
-  background-color: #2563eb;
+.switch.md {
+  width: 44px;
+  height: 24px;
 }
 
-.slider.disabled {
+.switch.lg {
+  width: 52px;
+  height: 28px;
+}
+
+.track {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: var(--surface-hover);
+  transition: background-color 200ms ease-in-out;
+}
+
+.checked .track {
+  background-color: var(--primary);
+}
+
+.switch:hover:not(:disabled) .track {
+  background-color: var(--surface-hover);
+}
+
+.switch.checked:hover:not(:disabled) .track {
+  background-color: var(--primary-hover);
+}
+
+/* Thumb sizes */
+.thumb {
+  position: relative;
+  display: block;
+  background-color: var(--surface);
+  border-radius: 9999px;
+  box-shadow: var(--shadow-sm);
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sm .thumb {
+  width: 16px;
+  height: 16px;
+  transform: translateX(2px);
+}
+
+.md .thumb {
+  width: 20px;
+  height: 20px;
+  transform: translateX(2px);
+}
+
+.lg .thumb {
+  width: 24px;
+  height: 24px;
+  transform: translateX(2px);
+}
+
+.sm .thumbChecked {
+  transform: translateX(18px);
+}
+
+.md .thumbChecked {
+  transform: translateX(22px);
+}
+
+.lg .thumbChecked {
+  transform: translateX(26px);
+}
+
+.focusRing {
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  transition: box-shadow 200ms ease-in-out;
+}
+
+.switch:focus-visible .focusRing {
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--primary);
+}
+
+.disabled {
   cursor: not-allowed;
+}
+
+.disabled .track {
+  background-color: var(--surface-hover);
   opacity: 0.5;
 }
 
-.thumb {
-  display: inline-block;
-  height: 20px;
-  width: 20px; 
-  border-radius: 9999px;
-  background-color: white;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  transform: translateX(4px);
-  transition: transform 200ms ease-in-out;
+.disabled .thumb {
+  background-color: var(--surface);
+  opacity: 0.5;
 }
 
-.thumbChecked {
-  transform: translateX(20px);
+@media (prefers-reduced-motion: no-preference) {
+  .thumb {
+    transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .track {
+    transition: background-color 200ms ease-in-out;
+  }
 }

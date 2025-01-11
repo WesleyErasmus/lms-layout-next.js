@@ -1,0 +1,78 @@
+:root {
+  /* Light Theme Colors */
+  --light-primary: #2563eb;
+  --light-primary-hover: #1d4ed8;
+  --light-secondary: #64748b;
+  --light-background: #ffffff;
+  --light-surface: #f8fafc;
+  --light-surface-hover: #f1f5f9;
+  --light-border: #e2e8f0;
+  --light-text: #0f172a;
+  --light-text-secondary: #475569;
+  --light-sidebar: #f1f5f9;
+  --light-navbar: #ffffff;
+  --light-accent: #3b82f6;
+
+  /* Dark Theme Colors */
+  --dark-primary: #60a5fa;
+  --dark-primary-hover: #3b82f6;
+  --dark-secondary: #94a3b8;
+  --dark-background: #0f172a;
+  --dark-surface: #1e293b;
+  --dark-surface-hover: #334155;
+  --dark-border: #334155;
+  --dark-text: #f8fafc;
+  --dark-text-secondary: #cbd5e1;
+  --dark-sidebar: #1e293b;
+  --dark-navbar: #1e293b;
+  --dark-accent: #60a5fa;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* Dark mode styles */
+[data-theme="dark"] {
+  --primary: var(--dark-primary);
+  --primary-hover: var(--dark-primary-hover);
+  --secondary: var(--dark-secondary);
+  --background: var(--dark-background);
+  --surface: var(--dark-surface);
+  --surface-hover: var(--dark-surface-hover);
+  --border: var(--dark-border);
+  --text: var(--dark-text);
+  --text-secondary: var(--dark-text-secondary);
+  --sidebar: var(--dark-sidebar);
+  --navbar: var(--dark-navbar);
+  --accent: var(--dark-accent);
+}
+
+/* Light mode styles */
+[data-theme="light"] {
+  --primary: var(--light-primary);
+  --primary-hover: var(--light-primary-hover);
+  --secondary: var(--light-secondary);
+  --background: var(--light-background);
+  --surface: var(--light-surface);
+  --surface-hover: var(--light-surface-hover);
+  --border: var(--light-border);
+  --text: var(--light-text);
+  --text-secondary: var(--light-text-secondary);
+  --sidebar: var(--light-sidebar);
+  --navbar: var(--light-navbar);
+  --accent: var(--light-accent);
+}

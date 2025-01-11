@@ -1,32 +1,25 @@
 .container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: var(--spacing-xl);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .header h1 {
   font-size: 2rem;
-  color: #1a1a1a;
+  color: var(--text);
   margin: 0;
+  font-weight: 500;
 }
 
 .controls {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: center;
-}
-
-.switchContainer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .savingOverlay {
@@ -35,38 +28,49 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(var(--background), 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
 .savingMessage {
-  background: white;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: var(--surface);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   font-size: 1rem;
-  color: #666;
+  color: var(--text);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
+  border: 1px solid var(--border);
+}
+
+.container > :not(:last-child) {
+  margin-bottom: var(--spacing-md);
 }
 
 @media (max-width: 768px) {
   .container {
-    padding: 1rem;
+    padding: var(--spacing-md);
   }
 
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: var(--spacing-md);
   }
 
   .controls {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .savingMessage {
+    margin: var(--spacing-md);
+    width: calc(100% - var(--spacing-xl));
   }
 }

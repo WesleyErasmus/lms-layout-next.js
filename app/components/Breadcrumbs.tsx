@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -62,7 +63,7 @@ export default function Breadcrumbs() {
         } else if (segment === "students") {
           breadcrumbItems.push({
             label: "Students",
-            path: "/routes/students",
+            path: "/students",
           });
         } else if (i > 0 && pathSegments[i - 1] === "students") {
           await fetchStudentName(segment);

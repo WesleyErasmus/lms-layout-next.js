@@ -1,24 +1,46 @@
 import React from "react";
-import "./CourseCard.module.css"
+import styles from "./CourseCard.module.css";
+import Image from "next/image";
 
 interface CourseCardProps {
-  image: string;
+  image?: string;
   title: string;
   category?: string;
   description: string;
+  href: string;
 }
 
-const CourseCard = (props: CourseCardProps) => {
+const CourseCard = ({
+  image,
+  title,
+  category,
+  description,
+  // href,
+}: CourseCardProps) => {
   return (
-    <div className="course-card-container">
-      <img className="card-image" src={props.image} alt={props.title} />
-      <div className="course-card-body">
-        <h3 className="course-card-title">{props.title}</h3>
-        <div className="course-card-description">{props.description}</div>
+    <div className={styles.courseCard}>
+      <div className={styles.imageContainer}>
+        {image ? (
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className={styles.cardImage}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className={styles.imagePlaceholder}>
+            <h3 className={styles.cardTitle}>{title}</h3>
+          </div>
+        )}
       </div>
-      <div className="course-card-button-group">
-        <button className="course-card-button">Open</button>
-        <div className="course-card-category">{props.category}</div>
+      <div className={styles.cardBody}>
+        {image && <h3 className={styles.cardTitle}>{title}</h3>}
+        <p className={styles.cardDescription}>{description}</p>
+      </div>
+      <div className={styles.cardFooter}>
+        {category && <span className={styles.category}>{category}</span>}
+        <button className={styles.cardButton}>View Course</button>
       </div>
     </div>
   );

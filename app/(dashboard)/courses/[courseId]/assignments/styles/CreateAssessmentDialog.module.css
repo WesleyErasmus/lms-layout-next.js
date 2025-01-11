@@ -1,11 +1,20 @@
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: white;
+  inset: 0;
+  background-color: var(--background);
   z-index: 1000;
+  animation: dialogEnter 0.2s ease-out;
+}
+
+@keyframes dialogEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dialog {
@@ -13,26 +22,102 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: var(--surface);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: var(--spacing-lg);
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.header h2 {
+  color: var(--text);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
 }
 
 .closeButton {
   background: none;
   border: none;
+  color: var(--text-secondary);
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  line-height: 1;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background-color: var(--surface-hover);
+  color: var(--text);
 }
 
 .content {
   flex: 1;
-  padding: 1rem;
+  padding: var(--spacing-lg);
   overflow-y: auto;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  background-color: var(--surface);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.formGroup label {
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--background);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.formGroup input:disabled {
+  background-color: var(--surface-hover);
+  cursor: not-allowed;
+}
+
+.formGroup input[type="number"] {
+  width: 120px;
+}
+
+.formGroup input[type="date"] {
+  width: fit-content;
 }

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./styles/globals.css";
-import "./styles/variables.css";
-import styles from "./layout.module.css";
+import "./styles/variables.css"; 
+import "./styles/globals.css"; 
+import styles from "./layout.module.css"; 
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import { CourseProvider } from "./contexts/CourseContext";
@@ -39,7 +39,7 @@ export default async function RootLayout({
     return <div>Error loading courses</div>;
   }
   return (
-    <html lang="en">
+    <html lang="en" data-theme="light">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthProvider>
           <CourseProvider>

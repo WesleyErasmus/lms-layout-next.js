@@ -1,0 +1,159 @@
+.profileContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+.loading, .error {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-secondary);
+}
+
+.error {
+  color: #dc2626;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xl);
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+}
+
+.avatarContainer {
+  flex-shrink: 0;
+}
+
+
+.studentName {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.studentCode {
+  color: var(--text-secondary);
+  margin: var(--spacing-sm) 0 0 0;
+  font-size: 1rem;
+}
+
+.profileContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.infoSection {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.value {
+  font-size: 1rem;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.controls {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.editInput {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  color: var(--text);
+  background-color: var(--surface);
+  transition: border-color 0.2s;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.savingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(var(--background), 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.savingMessage {
+  background-color: var(--surface);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  font-weight: 500;
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .profileHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
